@@ -1,0 +1,9 @@
+atlassian-ide-plugin.xml
+npm-debug.log
+cache.properties
+.DS_Store
+.idea/**
+.git/**
+coverage/**
+node_modules/**
+test/**

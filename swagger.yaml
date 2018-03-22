@@ -1,0 +1,445 @@
+`swagger: '2.0'
+
+info:
+  title: Recipes API
+  description: >-
+          This service allows users to create, search, update and rate recipes. All routes that retireves recipes data are protected and require a valid JWT token to consume them. To access data, use the Login route to obtain a token by supplying the credentails `username : secured123, password: secured123`. Click on Authorise to add a header with name `x-user-token` and value as the obtained token ( make sure that token is pasted as obtained, do not concatenate with any bearer ). The obtainted token will last for 1440 minutes before expiry ( This setting is configurable, and determined by the `JWT_EXPIRES_IN` variable in the `.env` file located in the root of this project.)
+
+  version: "1.0.0"
+
+host: localhost:8080
+
+schemes:
+  - http
+
+basePath: /v1
+securityDefinitions:
+  JWT:
+    type: apiKey
+    name: x-user-token
+    in: header
+produces:
+  - application/json
+consumes:
+  - application/json
+
+paths:
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Login to obtain JWT
+      description: |
+        Allow users to log in, and to receive a Token
+      parameters:
+        - name: login payload
+          in: body
+          description: The username/password
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        200:
+          description: Login Success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+              data:
+                $ref: '#/definitions/Token'
+        401:
+          description: Whether the user is not found or credentails supplied did not match while login
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: If bad data was inputed as username
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: If bad data was inputed as username
+          schema:
+            $ref: '#/definitions/Error'
+
+  /recipes:
+    get:
+      summary: Retrieve Recipes
+      description: Retrieve all recipes.
+      parameters:
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/name'
+        - $ref: '#/parameters/prep_time'
+        - $ref: '#/parameters/difficulty'
+        - $ref: '#/parameters/vegetarian'
+      security:
+        - JWT: []
+      tags:
+        - List
+
+      responses:
+        200:
+          description: An array of recipes
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Recipes'
+        400:
+          description: Bad input supplied in request
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Client not authorised to perform the action
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Creates a AccountType
+      description: Adds a new account type to the account type list.
+      tags:
+        - Create
+      parameters:
+        - name: payload
+          in: body
+          description: The account type to create
+          schema:
+            $ref: '#/definitions/AccountTypePayload'
+      responses:
+        200:
+          description: An array of account type
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                $ref: '#/definitions/AccountType'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /recipes/{id}:
+    get:
+      summary: Returns a single recipe.
+      description: Retrieve a specified recipes by id supplied.
+      security:
+        - JWT: []
+      tags:
+        - Get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id (unique identifier) of the recipe
+          type: integer
+      responses:
+        200:
+          description: Responds with the recipe which matches the id supplied, as well as the associated rating.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                $ref: '#/definitions/Recipe'
+        400:
+          description: Bad input supplied as id
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Client not authorised to perform the action
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: The recipe is not found
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+
+    put:
+      summary: Updates a account type.
+      description: Updates a specified account type corresponding to the id supplied.
+      tags:
+        - Update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id (unique identifier) of the account type
+          type: integer
+        - name: payload
+          in: body
+          schema:
+            $ref: '#/definitions/AccountTypePayload'
+      responses:
+        200:
+          description: Responds with the updated account type as well as the associated rating.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                $ref: '#/definitions/AccountType'
+        400:
+          description: Bad input supplied during the request
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: The account type is not found
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+
+    delete:
+      summary: Deletes a recipe.
+      description: Removes a specified recipe corresponding to the id supplied.
+      tags:
+        - Delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id (unique identifier) of the recipe
+          type: integer
+      responses:
+        200:
+          description: Returns 'true' if recipe was successfully deleted
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                type: boolean
+        400:
+          description: Bad input supplied during the request
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: The recipe is not found
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /recipes/{id}/rate:
+    put:
+      summary: Rates a recipe.
+      description: Rates a specified recipe corresponding to the id supplied.
+      tags:
+        - Rate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id (unique identifier) of the recipe
+          type: integer
+        - name: payload
+          in: body
+          schema:
+            $ref: '#/definitions/RatingPayload'
+      responses:
+        200:
+          description: Responds with the rated recipe as well as the associated ratings.
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                $ref: '#/definitions/RatingPayload'
+        400:
+          description: Bad input supplied during the request
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: The recipe is not found
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /search:
+    get:
+      summary: Searches Recipes
+      description: Searches all recipes ( returns a paginated result ).
+      parameters:
+        - $ref: '#/parameters/q'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
+      security:
+        - JWT: []
+      tags:
+        - Search
+      responses:
+        200:
+          description: An array of the matching recipes
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Recipes'
+        400:
+          description: Bad input supplied in request
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Client not authorised to perform the action
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+
+
+definitions:
+  Login:
+    required:
+      - username
+      - password
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+
+  Token:
+    type: object
+    properties:
+      token:
+        type: string
+
+  RecipePayload:
+    required:
+      - name
+      - prep_time
+      - difficulty
+      - vegetarian
+    properties:
+      name:
+        type: string
+      prep_time:
+        type: integer
+        format: int16
+      difficulty:
+        type: integer
+        format: int16
+      vegetarian:
+        type: boolean
+
+  Recipe:
+    type: object
+    description: A model that represents a single recipe.
+    properties:
+      id:
+        type: number
+        description: Unique identifier representing a recipe.
+      name:
+        type: string
+        description: The display name for the recipe.
+      created_at:
+        type: string
+        description: The date the recipe was created
+      ratings:
+        type: array
+        description: An array of rating.
+        items:
+          $ref: '#/definitions/RatingPayload'
+
+  Recipes:
+    properties:
+      recipes:
+        type: array
+        items:
+          $ref: "#/definitions/Recipe"
+
+  RatingPayload:
+    type: object
+    description: A model that represents a single rating.
+    properties:
+      rating:
+        type: integer
+        description: The rating score (must be between 1 and 5 )
+      comment:
+        type: string
+        description: A feed back comment ( optional)
+      rated_by:
+        type: string
+        description: The username of the user attempting to rate the recipe
+
+  Error:
+    type: object
+    description: A model that represents an error response returned by the API.
+    properties:
+      status:
+        type: string
+        description: A string indicating that the request failed. In the case of an error, the status will always be 'error'.
+      message:
+        type: string
+        description: A message to help the developer identify what went wrong. This field should never be used by they code to determine an outcome, neither should it ever be displayed to the a user.
+      code:
+        type: string
+        description: A unique code that can be used by your source code to determine an action to take to rectify the error. These codes are always in the form of a string. For example; INVALID_REQUEST, DUPLICATE_USER, INTERNAL_SERVER_ERROR. This code can be used to determine a message to display to the user.
+
+parameters:
+  q:
+    name: q
+    in: query
+    description: The search term to filter results sets by (optional). if this value is not supplied the api will return all recipes pagination.
+    type: string
+  name:
+    name: name
+    in: query
+    description: The recipename to filter results sets by (optional)
+    type: string
+  prep_time:
+    name: prep_time
+    in: query
+    description: The recipename prep_time value to filter results sets by (optional)
+    type: string
+  difficulty:
+    name: difficulty
+    in: query
+    description: The recipename difficulty value to filter results sets by (optional)
+    type: integer
+  vegetarian:
+    name: vegetarian
+    in: query
+    description: The vegetarian value to filter results sets by (optional)
+    type: boolean
+  limit:
+    name: limit
+    in: query
+    description: Number of recipes to return (optional). Default is 20,
+    type: integer
+  offset:
+    name: offset
+    in: query
+    description: The postion to pull recipes from  (optional), Defaykt us 0,
+    type: integer

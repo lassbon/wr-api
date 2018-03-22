@@ -1,0 +1,37 @@
+version: '2.1'
+
+services:
+    web:
+        build: .
+        container_name: progo
+        image: progo
+        volumes:
+            - .:/src
+            - ./docker_logs/transaction_service:/var/log/applications/transaction_service
+        ports:
+            - 8080
+        env_file:
+            - ./.env
+        networks:
+          - main_network
+
+    mysql:
+        container_name: shippingservice_mysql
+        image: mysql
+        ports:
+            - "3306"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_PASSWORD: "progo"
+            MYSQL_USER: "progo"
+            MYSQL_DATABASE: "progo"
+        networks:
+            - main_network
+
+volumes:
+  node_modules:
+
+networks:
+    main_network:
+        driver: bridge
+

@@ -6,7 +6,7 @@ exports.up = function (knex) {
             table.bigincrements('id').primary();
             table.string('userFirstname');
             table.string('userLastname');
-            table.string('ouserOthername');
+            table.string('userOthername');
             table.string('userPhoneNumber');
             table.string('userAddress');
             table.string('userEmail').notNullable().unique();

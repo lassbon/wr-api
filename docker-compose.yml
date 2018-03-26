@@ -16,7 +16,7 @@ services:
           - main_network
 
     mysql:
-        container_name: shippingservice_mysql
+        container_name: progo_mysql
         image: mysql
         ports:
             - "3306"

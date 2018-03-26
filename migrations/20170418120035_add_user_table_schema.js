@@ -4,8 +4,24 @@ exports.up = function (knex) {
     return knex.schema
         .createTableIfNotExists('user', function (table) {
             table.bigincrements('id').primary();
-            table.string('full_name');
-            table.string('email').notNullable().unique();
+            table.string('userFirstname');
+            table.string('userLastname');
+            table.string('ouserOthername');
+            table.string('userPhoneNumber');
+            table.string('userAddress');
+            table.string('userEmail').notNullable().unique();
+            table.string('userDOB');
+            table.string('country');
+            table.string('state');
+            table.string('userImageURL');
+            table.string('userAccountNumber');
+            table.string('userAccountName');
+            table.string('userBVN');
+            table.string('termsAndCondition');
+            table.string('isApproved');
+            table.string('isFacebook');
+            table.string('isTwitter');
+            table.string('isGoogle');
             table.string('password');
             table.timestamps();
         });

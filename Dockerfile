@@ -14,9 +14,6 @@ COPY ./package.json /src
 # Install node dependencies
 RUN npm install
 
-# Install global npm dependencies
-RUN npm install nodemon knex jshint jscs -g
-
 # Copy entire file to docker
 COPY . /src
 
@@ -24,7 +21,7 @@ COPY . /src
 VOLUME ["/src", "/var/log/applications/progo"]
 
 # Expose web service
-EXPOSE  8080
+EXPOSE  8080 8585 9615
 
 
-CMD ["sh", "-c", "npm start"]
+CMD ["node", "server.js"]

@@ -3,8 +3,6 @@
 let config = require('app/config/config');
 let serviceLocator = require('app/lib/service_locator');
 let Logger = require('app/lib/logger');
-let RecipeController = require('app/controllers/recipe');
-let RecipeService = require('app/services/recipe');
 let AccountController = require('app/controllers/account');
 let AccountService = require('app/services/account');
 

@@ -1,7 +1,7 @@
 {
-  "name": "recipesapi",
+  "name": "progo",
   "version": "1.0.0",
-  "description": "A simple Recipes API",
+  "description": "APIs for progo",
   "main": "server.js",
   "scripts": {
     "lint": "jshint . && jscs .",
@@ -15,12 +15,9 @@
     "url": ""
   },
   "keywords": [
-    "recipes",
-    "meal",
-    "cook",
-    "healthy"
+    "Ecommerce"
   ],
-  "author": "edwin ikechukwu",
+  "author": "Lawrence Agbani <l.agbani@hotmail.co.uk>",
   "license": "ISC",
   "bugs": {
     "url": ""

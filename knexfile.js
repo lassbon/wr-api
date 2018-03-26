@@ -4,8 +4,8 @@ const config = require('app/config/config');
 
 let dbConfig = {
     client: 'pg',
-    connection: config.postgres.connection,
-    pool: config.postgres.pool,
+    connection: config.mysql.connection,
+    pool: config.mysql.pool,
     migrations: {
         tableName: 'migrations'
     }

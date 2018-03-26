@@ -3,7 +3,7 @@
 const config = require('app/config/config');
 
 let dbConfig = {
-    client: 'pg',
+    client: 'mysql',
     connection: config.mysql.connection,
     pool: config.mysql.pool,
     migrations: {

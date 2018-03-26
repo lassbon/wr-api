@@ -6,7 +6,7 @@ exports.up = function (knex) {
             table.bigincrements('id').primary();
             table.string('userFirstname');
             table.string('userLastname');
-            table.string('ouserOthername');
+            table.string('userOthername');
             table.string('userPhoneNumber');
             table.string('userAddress');
             table.string('userEmail').notNullable().unique();
@@ -15,15 +15,15 @@ exports.up = function (knex) {
             table.string('state');
             table.string('userImageURL');
             table.string('userAccountNumber');
-            table.string('userAccountName');
+            table.integer('userAccountName');
             table.string('userBVN');
-            table.string('termsAndCondition');
-            table.string('isApproved');
-            table.string('isFacebook');
-            table.string('isTwitter');
-            table.string('isGoogle');
+            table.boolean('termsAndCondition');
+            table.boolean('isApproved');
+            table.boolean('isFacebook');
+            table.boolean('isTwitter');
+            table.boolean('isGoogle');
             table.string('password');
-            table.timestamps();
+            table.timestamp('created_at').defaultTo(knex.fn.now())
         });
 };
 

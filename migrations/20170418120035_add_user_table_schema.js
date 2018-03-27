@@ -14,9 +14,9 @@ exports.up = function (knex) {
             table.string('country');
             table.string('state');
             table.string('userImageURL');
-            table.string('userAccountNumber');
+            table.integer('userAccountNumber');
             table.string('userAccountName');
-            table.string('userBVN');
+            table.integer('userBVN');
             table.boolean('termsAndCondition');
             table.boolean('isApproved');
             table.boolean('isFacebook');

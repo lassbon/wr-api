@@ -8,6 +8,7 @@
     "migrate": "knex migrate:latest",
     "seed": "knex seed:run",
     "regression": "NODE_PATH=. istanbul cover _mocha -- -R spec test/regression/*",
+    "rollback": "knex migrate:rollback",
     "start": "npm run migrate && npm run seed && nodemon server.js"
   },
   "repository": {

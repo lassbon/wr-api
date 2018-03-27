@@ -1,6 +1,6 @@
 'use strict';
 
-let appName = 'progo';
+let appName = 'progo or workRaven';
 const config = {
     appName: appName,
     environment: process.env.NODE_ENV,
@@ -43,13 +43,13 @@ const config = {
         state: "Lagos",
         userImageURL: "coming soon",
         userAccountNumber: "1234567890",
-        userAccountName: "Abayomi Rasheed",
+        userAccountName: 67,
         userBVN: "120354278",
-        termsAndCondition: "true",
-        isApproved: "true",
-        isFacebook: "false",
-        isTwitter: "false",
-        isGoogle: "false",        
+        termsAndCondition: true,
+        isApproved: true,
+        isFacebook: false,
+        isTwitter: false,
+        isGoogle: false,        
         userName: process.env.API_TEST_USER_EMAIL,
         password: process.env.API_TEST_USER_PASSWORD
     }

@@ -15,7 +15,7 @@ exports.up = function (knex) {
             table.string('state');
             table.string('userImageURL');
             table.string('userAccountNumber');
-            table.integer('userAccountName');
+            table.string('userAccountName');
             table.string('userBVN');
             table.boolean('termsAndCondition');
             table.boolean('isApproved');

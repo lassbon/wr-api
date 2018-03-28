@@ -64,7 +64,7 @@ class AccountService {
         let reqId = shortid.generate();
         this.logger.info(`Request ID: ${reqId} - Retrieve a user with username: ${username}`);
 
-        return new User({ email: username })
+        return new User({ userEmail: username })
             .fetch({ require: true })
             .then(user => {
 
@@ -88,6 +88,66 @@ class AccountService {
                 throw error;
             });
     }
+
+
+
+
+
+
+    /**
+     * SignUp
+     *
+     * @param username
+     * @param password
+     * @returns {Promise.<TResult>}
+     */
+
+    userSignUp(userFirstname, userLastname, userOthername, userPhoneNumber,  userAddress, userEmail,
+        userDOB, country, state, userImageURL, userAccountNumber, userAccountName, userBVN, termsAndCondition,
+        password, confirmPassword) {
+
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a user with username: ${username}`);
+      
+        if (req.body.password !== req.body.confirmPassword) {
+
+            this.logger.error(`Request ID: ${reqId} - comparing password for use ${email}, 
+                reason: ${error.message}`);    
+            return res.json(401, {
+              status: "Error",
+              err: "Passwords doesn't match.."
+            });
+          }
+
+         new User({ userFirstname: userFirstname,
+                          userLastname: userLastname,
+                          userOthername: userOthername,
+                          userPhoneNumber: userPhoneNumber,
+                          userAddress: userAddress,
+                          userEmail: userEmail,
+                          userDOB: userDOB,
+                          country: country,
+                          state: country,
+                          userImageURL: userImageURL,
+                          userAccountNumber: userAccountNumber,
+                          userAccountName: userAccountName,
+                          userBVN: userBVN,
+                          termsAndCondition: termsAndCondition
+
+                         })
+            .then(user => {
+
+                this.logger.info(`Request ID: ${reqId} - Retrieved user `, user);
+
+                return "account created"
+            }).catch(error => {
+
+                this.logger.error(`Request ID: ${reqId} - Error retrieving user with username ${username}, 
+                reason: ${error.message}`);
+                throw error;
+            });
+    }
+
 
     /**
      * Find user

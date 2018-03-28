@@ -89,68 +89,54 @@ class AccountService {
             });
     }
 
-
-
-
-
-
     /**
      * SignUp
      *
-     * @param username
-     * @param password
+     * @param userData
      * @returns {Promise.<TResult>}
      */
 
-    userSignUp(userFirstname, userLastname, userOthername, userPhoneNumber,  userAddress, userEmail,
-        userDOB, country, state, userImageURL, userAccountNumber, userAccountName, userBVN, termsAndCondition,
-        password, confirmPassword) {
+    signup(userData) {
 
         let reqId = shortid.generate();
-        this.logger.info(`Request ID: ${reqId} - Retrieve a user with username: ${username}`);
-      
-        if (req.body.password !== req.body.confirmPassword) {
+        this.logger.info(`Request ID: ${reqId} - Creating a user with data: ${JSON.stringify(userData)}`);
 
-            this.logger.error(`Request ID: ${reqId} - comparing password for use ${email}, 
-                reason: ${error.message}`);    
-            return res.json(401, {
-              status: "Error",
-              err: "Passwords doesn't match.."
-            });
-          }
-
-         new User({ userFirstname: userFirstname,
-                          userLastname: userLastname,
-                          userOthername: userOthername,
-                          userPhoneNumber: userPhoneNumber,
-                          userAddress: userAddress,
-                          userEmail: userEmail,
-                          userDOB: userDOB,
-                          country: country,
-                          state: country,
-                          userImageURL: userImageURL,
-                          userAccountNumber: userAccountNumber,
-                          userAccountName: userAccountName,
-                          userBVN: userBVN,
-                          termsAndCondition: termsAndCondition
-
-                         })
-            .then(user => {
-
-                this.logger.info(`Request ID: ${reqId} - Retrieved user `, user);
-
-                return "account created"
-            }).catch(error => {
-
-                this.logger.error(`Request ID: ${reqId} - Error retrieving user with username ${username}, 
-                reason: ${error.message}`);
-                throw error;
+        this.findUserByEmail(userData.userEmail)
+            .then((user) => {
+                // If we found the user that means the user already exists
+                // Throw an error back to client
+                throw new errors.UserExists('The user already exists');
+            })
+            .catch((error) => {
+                switch (err.constructor){
+                    case errors.UserNotFound:
+                        // We didn't find the user, let's add them
+                        let data = userData;
+                        data.password = this.encryptPassword(data.password);
+                        return new User().save(data)
+                            .then((user) => {
+                
+                                this.logger.info(`Request ID: ${reqId} - User created `, JSON.stringify(user));
+                
+                                return user;
+                            }).catch((error) => {
+                
+                                this.logger.error(`Request ID: ${reqId} - Error creating user with data ${JSON.stringify(userData)}, 
+                                reason: ${error.message}`);
+                                throw error;
+                            });
+                        break;
+                    default:
+                        this.logger.error(`Request ID: ${reqId} - Error creating user with data ${JSON.stringify(userData)}, 
+                        reason: ${error.message}`);
+                        throw error;
+                }
             });
     }
 
 
     /**
-     * Find user
+     * Find user by ID
      *
      * @param id the pk of the user
      * @returns {Promise.<TResult>}
@@ -172,6 +158,33 @@ class AccountService {
 
                 //tell the developer what went wrong
                 this.logger.error(`Request ID: ${reqId} - Error retrieving user with id ${id},
+                 reason: ${error.message}`);
+                throw error;
+            });
+    }
+
+    /**
+     * Find user by email
+     *
+     * @param id the pk of the user
+     * @returns {Promise.<TResult>}
+     */
+
+    findUserByEmail(email) {
+        this.logger.info(`Retrieving a user with email: ${email}`);
+
+        return new User({ userEmail: email })
+            .fetch({ require: true })
+            .then(user => {
+                delete user.attributes.password; //never return the user's password
+
+                this.logger.info(`Retrieved user `, JSON.stringify(user));
+
+                return user;
+            }).catch(error => {
+
+                //tell the developer what went wrong
+                this.logger.error(`Error retrieving user with email ${email},
                  reason: ${error.message}`);
                 throw error;
             });

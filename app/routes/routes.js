@@ -86,13 +86,13 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      * User signUp 
      */
     server.post({
-        path: '/userSignUp',
-        name: 'User Signup',
+        path: '/signup',
+        name: 'Signup',
         version: '1.0.0',
         validation: {
             body: require('app/validations/user_signup')
         }
-    }, (req, res, next) => account.userSignUp(req, res, next));
+    }, (req, res, next) => account.signup(req, res, next));
 
     if (config.environment !== 'production') {
 

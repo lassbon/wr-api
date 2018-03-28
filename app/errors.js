@@ -24,6 +24,8 @@ module.exports = {
 
     Unauthorized: create('Unauthorized', { code: 'UNAUTHORIZED' }),
 
+    UserExists: create('UserExists', { code: 'USER_EXISTS' }),
+
     //this exception will only be used internally and will never get thrown to client
     UserNotFound: create('UserNotFound', { code: 'USER_NOT_FOUND' }),
 

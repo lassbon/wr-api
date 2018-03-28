@@ -25,12 +25,16 @@ class AccountController {
      */
     login(req, res, next) {
 
-        this.service.login(req.body.username, req.body.password)
-            .then((data) => {
+        this.service.login(req.body.username, req.body.password)   
+        .then((data) => {
             res.send(httpStatus.OK, data);
-        }).catch((err) => {
+        })
+        .catch((err) => {
             switch (err.constructor){
                 case errors.UserNotFound:
+                    res.send(httpStatus.UNAUTHORIZED,
+                        new errors.Unauthorized('Unauthorized'));
+                    break;
                 case errors.PasswordMissmatch:
                     res.send(httpStatus.UNAUTHORIZED,
                         new errors.Unauthorized('Unauthorized'));
@@ -42,9 +46,6 @@ class AccountController {
         }).then(next);
     }
 
-
-
-
     /**
      * Endpoint Post /signup
      * Signup 
@@ -52,42 +53,22 @@ class AccountController {
      * @param res
      * @param next
      */
-    userSignUp(req, res, next) {
+    signup(req, res, next) {
 
-        this.service.userSignUp(
-                                req.body.userFirstname, 
-                                req.body.userLastname,
-                                req.body.userOthername,
-                                req.body.userPhoneNumber,
-                                req.body.userAddress,
-                                req.body.userEmail,
-                                req.body.userDOB,
-                                req.body.country,
-                                req.body.state,
-                                req.body.userImageURL,
-                                req.body.userAccountNumber,
-                                req.body.userAccountName,
-                                req.body.userBVN,
-                                req.body.termsAndCondition,
-                                req.body.isApproved,
-                                req.body.isFacebook,
-                                req.body.isTwitter,
-                                req.body.isGoogle,
-                                req.body.password
-
-        
-        ).then((data) => {
+        this.service.signup(req.body)
+        .then((data) => {
             res.send(httpStatus.OK, data);
-        }).catch((err) => {
+        })
+        .catch((err) => {
             switch (err.constructor){
                 case errors.UserNotFound:
-                case errors.PasswordMissmatch:
-                    res.send(httpStatus.UNAUTHORIZED,
-                        new errors.Unauthorized('Unauthorized'));
+                case errors.UserExists:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.UserExists('The user with the email exists already'));
                     break;
                 default:
                     res.send(httpStatus.INTERNAL_SERVER_ERROR,
-                        new errors.InternalServerError('Internal Server Error'));
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
             }
         }).then(next);
     }

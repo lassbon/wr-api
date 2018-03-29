@@ -6,7 +6,7 @@ let errors = require('app/errors');
 let User = bookshelf.Model.extend({
     tableName: 'user',
     hasTimestamps: true,
-    hidden: ['updated_at'],
+    hidden: ['created_at'],
 
     fetch: function () {
         return bookshelf.Model.prototype.fetch.apply(this, arguments)

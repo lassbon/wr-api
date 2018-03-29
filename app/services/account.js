@@ -108,11 +108,11 @@ class AccountService {
                 throw new errors.UserExists('The user already exists');
             })
             .catch((error) => {
-                switch (err.constructor){
+                switch (error.constructor){
                     case errors.UserNotFound:
                         // We didn't find the user, let's add them
                         let data = userData;
-                        data.password = this.encryptPassword(data.password);
+                      //  data.password = this.encryptPassword(data.password);
                         return new User().save(data)
                             .then((user) => {
                 

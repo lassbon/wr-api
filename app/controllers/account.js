@@ -59,8 +59,8 @@ class AccountController {
         .then((data) => {
             res.send(httpStatus.OK, data);
         })
-        .catch((err) => {
-            switch (err.constructor){
+        .catch((error) => {
+            switch (error.constructor){
                 case errors.UserNotFound:
                 case errors.UserExists:
                     res.send(httpStatus.INTERNAL_SERVER_ERROR,

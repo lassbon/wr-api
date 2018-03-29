@@ -46,7 +46,7 @@ const config = {
         userAccountName: 'Abayomi Rasheed',
         userBVN: '120354278',
         termsAndCondition: true,
-        isApproved: true,
+       // isApproved: true,
         isFacebook: false,
         isTwitter: false,
         isGoogle: false,        

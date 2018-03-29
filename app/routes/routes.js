@@ -94,6 +94,32 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
         }
     }, (req, res, next) => account.signup(req, res, next));
 
+/**
+     * User profile 
+     * get the Users profile
+     */
+    server.get({
+        path: '/profile',
+        name: 'Profile',
+        version: '1.0.0',
+ 
+    }, (req, res, next) => account.profile(req, res, next));
+    
+    /**
+     * User profile 
+     * Update the Users profile
+
+    server.post({
+        path: '/profile',
+        name: 'Profile',
+        version: '1.0.0',
+        validation: {
+            body: require('app/validations/update_profile')
+        }
+ 
+    }, (req, res, next) => account.profile(req, res, next));
+    **/
+
     if (config.environment !== 'production') {
 
         server.get({

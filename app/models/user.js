@@ -19,6 +19,17 @@ let User = bookshelf.Model.extend({
             });
     },
 
+    save:  function () {
+        return bookshelf.Model.prototype.save.apply(this, arguments)
+            .catch(error => {
+                if (error.code === 'ER_DUP_ENTRY') {
+                    throw new errors.UserExists('The user already exists');
+                }
+
+                throw error;
+            });
+    }
+
 });
 
 module.exports = bookshelf.model('User', User);

@@ -23,7 +23,7 @@ exports.up = function (knex) {
             table.boolean('isTwitter');
             table.boolean('isGoogle');
             table.string('password');
-            table.timestamp('created_at').defaultTo(knex.fn.now())
+            table.timestamps(true, true);
         });
 };
 

@@ -95,42 +95,24 @@ class AccountService {
      * @param userData
      * @returns {Promise.<TResult>}
      */
-
     signup(userData) {
 
         let reqId = shortid.generate();
         this.logger.info(`Request ID: ${reqId} - Creating a user with data: ${JSON.stringify(userData)}`);
 
-        this.findUserByEmail(userData.userEmail)
+        let data = userData;
+        data.password = this.constructor.encryptPassword(data.password);
+        return new User().save(data)
             .then((user) => {
-                // If we found the user that means the user already exists
-                // Throw an error back to client
-                throw new errors.UserExists('The user already exists');
-            })
-            .catch((error) => {
-                switch (err.constructor){
-                    case errors.UserNotFound:
-                        // We didn't find the user, let's add them
-                        let data = userData;
-                        data.password = this.encryptPassword(data.password);
-                        return new User().save(data)
-                            .then((user) => {
+                this.logger.info(`Request ID: ${reqId} - User created `, JSON.stringify(user));
+                delete user.attributes.password;
                 
-                                this.logger.info(`Request ID: ${reqId} - User created `, JSON.stringify(user));
-                
-                                return user;
-                            }).catch((error) => {
-                
-                                this.logger.error(`Request ID: ${reqId} - Error creating user with data ${JSON.stringify(userData)}, 
-                                reason: ${error.message}`);
-                                throw error;
-                            });
-                        break;
-                    default:
-                        this.logger.error(`Request ID: ${reqId} - Error creating user with data ${JSON.stringify(userData)}, 
-                        reason: ${error.message}`);
-                        throw error;
-                }
+                return user;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error creating user with data ${JSON.stringify(userData)}, 
+                reason: ${error.message}`);
+                throw error;
             });
     }
 

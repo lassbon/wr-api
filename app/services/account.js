@@ -115,6 +115,30 @@ class AccountService {
                 throw error;
             });
     }
+    /**
+     * Profile
+     *
+     * @param email
+     * @returns {Promise.<TResult>}
+     */
+    profile(email) {
+
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a user with email: ${email}`);
+
+        return new User({ userEmail: email })
+       .fetch({ require: true })
+       .then(user => {
+
+           this.logger.info(`Request ID: ${reqId} - Retrieved user `, user);
+           return user;
+       }).catch(error => {
+
+           this.logger.error(`Request ID: ${reqId} - Error retrieving user with email ${email}, 
+           reason: ${error.message}`);
+           throw error;
+       });
+    }
 
 
     /**

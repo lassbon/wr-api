@@ -73,6 +73,57 @@ class AccountController {
         }).then(next);
     }
 
+    /**
+     * Endpoint GET /profile/:id
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    profile(req, res, next) {
+
+        this.service.profile(req.params.id)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            switch (error.constructor){
+                case errors.UserNotFound:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.UserNotFound('The user with the email does not exists'));
+                    break;
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+            }
+        }).then(next);
+    }
+        /**
+     * Endpoint PATCH /updateProfile/:id
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    updateProfile(req, res, next) {
+
+        this.service.profile(req.body)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            switch (error.constructor){
+                case errors.UserNotFound:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.UserNotFound('The user with the email does not exists'));
+                    break;
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+            }
+        }).then(next);
+    }
+       
 }
 
 module.exports = AccountController;

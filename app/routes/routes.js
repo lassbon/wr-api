@@ -74,7 +74,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      * Authentication Area
      */
     server.post({
-        path: '/login',
+        path: '/users/login',
         name: 'Login',
         version: '1.0.0',
         validation: {
@@ -86,7 +86,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      * User signUp 
      */
     server.post({
-        path: '/signup',
+        path: '/users/signup',
         name: 'Signup',
         version: '1.0.0',
         validation: {
@@ -99,11 +99,25 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      * get the Users profile
      */
     server.get({
-        path: '/profile',
+        path: '/users/profile/:id',
         name: 'Profile',
         version: '1.0.0',
  
     }, (req, res, next) => account.profile(req, res, next));
+
+/**
+     * User profile 
+     * Update the Users profile
+     */
+    server.patch({
+        path: '/users/updateprofile/:id',
+        name: 'Update_Profile',
+        version: '1.0.0',
+         validation: {
+            body: require('app/validations/user_updateprofile')
+        }
+ 
+    }, (req, res, next) => account.updateProfile(req, res, next));
     
     /**
      * User profile 

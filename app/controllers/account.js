@@ -17,7 +17,7 @@ class AccountController {
     }
 
     /**
-     * Endpoint Post /login
+     * Endpoint Post /users/login
      * Login to obtain a jwt
      * @param req
      * @param res
@@ -47,7 +47,7 @@ class AccountController {
     }
 
     /**
-     * Endpoint Post /signup
+     * Endpoint Post /users/signup
      * Signup 
      * @param req
      * @param res
@@ -74,7 +74,7 @@ class AccountController {
     }
 
     /**
-     * Endpoint GET /profile/:id
+     * Endpoint GET /users/profile/:id
      * Signup 
      * @param req
      * @param res
@@ -100,7 +100,7 @@ class AccountController {
     }
 
     /**
-     * Endpoint PATCH /updateProfile/:id
+     * Endpoint PATCH /users/updateProfile/:id
      * Signup 
      * @param req
      * @param res

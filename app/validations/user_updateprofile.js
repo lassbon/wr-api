@@ -2,13 +2,16 @@
 
 let joi = require('joi');
 
-module.exports = {
-    userFirstname: joi.string().required(),
-    userLastname: joi.string().required(),
-    userPhoneNumber: joi.string().required(),
-   // userEmail: joi.string().email().required(),
-    userAccountNumber: joi.string().required(),
-    password: joi.string().required(),
-    userBVN: joi.string().required()
-};
+const schema = joi.object().keys({
+    userFirstname: joi.string(),
+    userLastname: joi.string(),
+    userPhoneNumber: joi.string(),
+    userAccountNumber: joi.string(),
+    password: joi.string(),
+    userBVN: joi.string()
+
+    // At least ONE of these parameters must be sent
+}).or('userFirstname', 'userLastname', 'userPhoneNumber', 'userAccountNumber', 'password', 'userBVN');
+
+module.exports = schema;
 

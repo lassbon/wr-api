@@ -71,7 +71,9 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
     //     (req, res, next) => recipe.rate(req, res, next));
 
     /**
-     * Authentication Area
+     * User Area.
+     * Contains endpoints that manages users;
+     * From authentication to profile edit.
      */
     server.post({
         path: '/users/login',
@@ -82,9 +84,6 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
         }
     }, (req, res, next) => account.login(req, res, next));
 
-/**
-     * User signUp 
-     */
     server.post({
         path: '/users/signup',
         name: 'Signup',
@@ -100,7 +99,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      */
     server.get({
         path: '/users/profile/:id',
-        name: 'Profile',
+        name: 'GetProfile',
         version: '1.0.0',
  
     }, (req, res, next) => account.profile(req, res, next));
@@ -110,8 +109,8 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      * Update the Users profile
      */
     server.patch({
-        path: '/users/updateprofile/:id',
-        name: 'Update_Profile',
+        path: '/users/profile/:id',
+        name: 'UpdateProfile',
         version: '1.0.0',
          validation: {
             body: require('app/validations/user_updateprofile')

@@ -98,7 +98,8 @@ class AccountController {
             }
         }).then(next);
     }
-        /**
+
+    /**
      * Endpoint PATCH /updateProfile/:id
      * Signup 
      * @param req

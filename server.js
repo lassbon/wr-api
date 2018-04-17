@@ -34,9 +34,12 @@ let accountService = serviceLocator.get('accountService');
 
 let passport = require('passport');
 let passportJWT = require('passport-jwt');
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 let ExtractJwt = passportJWT.ExtractJwt;
 let JwtStrategy = passportJWT.Strategy;
+// load the auth variables
+var configAuth = require('app/config/socialauth');
 
 let jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromHeader('x-user-token');
@@ -58,6 +61,19 @@ var strategy = new JwtStrategy(jwtOptions, (jwtPayload, next) => {
         }
     });
 });
+
+//allow facebook login
+passport.use(new FacebookStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 
 passport.use(strategy);
 

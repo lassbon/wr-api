@@ -84,6 +84,17 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
         }
     }, (req, res, next) => account.login(req, res, next));
 
+
+    server.post({
+        path: '/users/facebook/login',
+        name: 'Facebook Login',
+        version: '1.0.0',
+        validation: {
+            body: require('app/validations/login')
+        }
+    }, (req, res, next) => account.facebooklogin(req, res, next));
+
+
     server.post({
         path: '/users/signup',
         name: 'Signup',

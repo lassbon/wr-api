@@ -90,6 +90,20 @@ class AccountService {
     }
 
     /**
+     * Facebook Login 
+     *
+     * @param email
+     * @param password
+     * @returns {Promise.<TResult>}
+     */
+
+    facebooklogin(username, password) {
+    
+
+        
+    }
+
+    /**
      * SignUp
      *
      * @param userData

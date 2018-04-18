@@ -64,9 +64,9 @@ var strategy = new JwtStrategy(jwtOptions, (jwtPayload, next) => {
 
 //allow facebook login
 passport.use(new FacebookStrategy({
-    clientID: FACEBOOK_APP_ID,
-    clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
+    clientID: configAuth.clientID,
+    clientSecret: configAuth.clientSecret,
+    callbackURL: configAuth.callbackURL
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, function (err, user) {

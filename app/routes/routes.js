@@ -86,7 +86,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
 
 
     server.post({
-        path: '/users/facebook/login',
+        path: '/users/login/facebook',
         name: 'Facebook Login',
         version: '1.0.0',
         validation: {

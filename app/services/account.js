@@ -55,16 +55,16 @@ class AccountService {
     /**
      * Login to obtain a signed jwt
      *
-     * @param username
+     * @param email
      * @param password
      * @returns {Promise.<TResult>}
      */
 
-    login(username, password) {
+    login(email, password) {
         let reqId = shortid.generate();
-        this.logger.info(`Request ID: ${reqId} - Retrieve a user with username: ${username}`);
+        this.logger.info(`Request ID: ${reqId} - Retrieve a user with email: ${email}`);
 
-        return new User({ userEmail: username })
+        return new User({ userEmail: email })
             .fetch({ require: true })
             .then(user => {
 
@@ -83,11 +83,49 @@ class AccountService {
                 });
             }).catch(error => {
 
-                this.logger.error(`Request ID: ${reqId} - Error retrieving user with username ${username}, 
+                this.logger.error(`Request ID: ${reqId} - Error retrieving user with email ${email}, 
                 reason: ${error.message}`);
                 throw error;
             });
     }
+
+      /**
+     * Pro Login to obtain a signed jwt
+     *
+     * @param email
+     * @param password
+     * @returns {Promise.<TResult>}
+     */
+
+    login(email, password) {
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a professional with email: ${email}`);
+
+        return new User({ userEmail: email })
+            .fetch({ require: true })
+            .then(user => {
+
+                this.logger.info(`Request ID: ${reqId} - Retrieved pro `, user);
+
+                return this.comparePasswords(password, user.get('password')).then((match) => {
+                    if (!match) {
+
+                        throw new errors.PasswordMissmatch('Wrong password supplied');
+                    }
+
+                    let payload = { id: user.id }; //only expose user-id in token
+
+                    return { token: jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn }) };
+
+                });
+            }).catch(error => {
+
+                this.logger.error(`Request ID: ${reqId} - Error retrieving user with email ${email}, 
+                reason: ${error.message}`);
+                throw error;
+            });
+    }
+
 
     /**
      * Facebook Login 
@@ -116,6 +154,8 @@ class AccountService {
 
         let data = userData;
         data.password = this.constructor.encryptPassword(data.password);
+        data.referralCode = this.generateReferralCode();
+
         return new User().save(data)
             .then((user) => {
                 this.logger.info(`Request ID: ${reqId} - User created `, JSON.stringify(user));
@@ -209,6 +249,58 @@ class AccountService {
                 throw error;
             });
     }
+    /**
+     * Format Phone Number
+     *
+     * @param phoneNumber
+     * @returns formatted phoneNumber
+     */
+
+    formatPhoneNumber(phoneNumber) 
+    {
+       var  raw_phoneNumber = phoneNumber.substr(0,1);
+       if (raw_phoneNumber == 0 ) 
+        {
+            internationalPrefix = "+234";     
+            num10Digits = phoneNumber.substr(1);//remove leading zero in phonenumer               
+            fullNumber = internationalPrefix . num10Digits;  //concatenate with +234
+            
+            return fullNumber;
+
+         } 
+         else 
+             if (substr(phoneNumber, 1, 3) == '234') 
+         {
+            //substr('abcdef', 0, 4);  // abcd
+            fullNumber = phoneNumber;
+            return fullNumber;
+        }
+        else 
+        {
+             return phoneNumber;  //return "Wrong Number Format"  
+        }
+        
+    }
+
+ /**
+     * Genrate Referral Code
+     *
+     * @returns code
+     */
+
+    generateReferralCode() 
+    {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      
+        for (var i = 0; i < 5; i++)
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+      
+        return text;
+       
+     }
+        
+
 
 }
 

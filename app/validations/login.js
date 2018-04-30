@@ -3,6 +3,6 @@
 let joi = require('joi');
 
 module.exports = {
-    username: joi.string().required(),
+    email: joi.string().required(),
     password: joi.string().required()
 };

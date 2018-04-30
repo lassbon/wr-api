@@ -77,17 +77,38 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      */
     server.post({
         path: '/users/login',
-        name: 'Login',
+        name: 'User Login',
         version: '1.0.0',
         validation: {
             body: require('app/validations/login')
         }
     }, (req, res, next) => account.login(req, res, next));
 
+     
+    server.post({
+        path: '/pro/login',
+        name: 'Pro Login',
+        version: '1.0.0',
+        validation: {
+            body: require('app/validations/login')
+        }
+    }, (req, res, next) => account.prologin(req, res, next));
+
+
+    server.post({
+        path: '/pro/signup',
+        name: 'Pro Signup',
+        version: '1.0.0',
+        validation: {
+            body: require('app/validations/user_signup')
+        }
+    }, (req, res, next) => account.prosignup(req, res, next));
+
+
 
     server.post({
         path: '/users/login/facebook',
-        name: 'Facebook Login',
+        name: 'User Facebook Login',
         version: '1.0.0',
         validation: {
             body: require('app/validations/login')
@@ -97,7 +118,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
 
     server.post({
         path: '/users/signup',
-        name: 'Signup',
+        name: 'User Signup',
         version: '1.0.0',
         validation: {
             body: require('app/validations/user_signup')
@@ -110,10 +131,38 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      */
     server.get({
         path: '/users/profile/:id',
-        name: 'GetProfile',
+        name: 'User GetProfile',
         version: '1.0.0',
  
     }, (req, res, next) => account.profile(req, res, next));
+
+    /**
+     * Pro profile 
+     * get the Professionals profile
+     */
+    server.get({
+        path: '/pro/profile/:id',
+        name: 'Pro getProfile',
+        version: '1.0.0',
+ 
+    }, (req, res, next) => account.proProfile(req, res, next));
+
+
+/**
+     * Pro profile 
+     * Update the Pro profile
+     */
+    server.patch({
+        path: '/pro/profile/:id',
+        name: 'Pro updateProfile',
+        version: '1.0.0',
+         validation: {
+            body: require('app/validations/user_updateprofile')
+        }
+ 
+    }, (req, res, next) => account.updateProProfile(req, res, next));
+    
+
 
 /**
      * User profile 
@@ -121,7 +170,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      */
     server.patch({
         path: '/users/profile/:id',
-        name: 'UpdateProfile',
+        name: 'user UpdateProfile',
         version: '1.0.0',
          validation: {
             body: require('app/validations/user_updateprofile')
@@ -129,6 +178,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
  
     }, (req, res, next) => account.updateProfile(req, res, next));
     
+
     /**
      * User profile 
      * Update the Users profile

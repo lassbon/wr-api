@@ -25,7 +25,7 @@ class AccountController {
      */
     login(req, res, next) {
 
-        this.service.login(req.body.username, req.body.password)   
+        this.service.login(req.body.email, req.body.password)   
         .then((data) => {
             res.send(httpStatus.OK, data);
         })
@@ -46,6 +46,36 @@ class AccountController {
         }).then(next);
     }
 
+
+    /**
+     * Endpoint Post /pro/login
+     * PRO Login to obtain a jwt
+     * @param req
+     * @param res
+     * @param next
+     */
+    prologin(req, res, next) {
+
+        this.service.prologin(req.body.email, req.body.password)   
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((err) => {
+            switch (err.constructor){
+                case errors.UserNotFound:
+                    res.send(httpStatus.UNAUTHORIZED,
+                        new errors.Unauthorized('Unauthorized'));
+                    break;
+                case errors.PasswordMissmatch:
+                    res.send(httpStatus.UNAUTHORIZED,
+                        new errors.Unauthorized('Unauthorized'));
+                    break;
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error'));
+            }
+        }).then(next);
+    }
     /**
      * Endpoint Post /users/signup
      * Signup 

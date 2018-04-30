@@ -22,6 +22,9 @@ exports.up = function (knex) {
             table.boolean('isFacebook');
             table.boolean('isTwitter');
             table.boolean('isGoogle');
+            table.string('userStatus');
+            table.string('referralCode');
+            table.string('invitedByReferralCode');
             table.string('password');
             table.timestamps(true, true);
         });

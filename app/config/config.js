@@ -45,13 +45,23 @@ const config = {
         userAccountNumber: "1234567890",
         userAccountName: 'Abayomi Rasheed',
         userBVN: '120354278',
+        userStatus: 'Active',
+        referralCode: '54ASX',
+        invitedByReferralCode:'YYT2w',
         termsAndCondition: true,
-       // isApproved: true,
+        isApproved: true,
         isFacebook: false,
         isTwitter: false,
         isGoogle: false,        
         userName: process.env.API_TEST_USER_EMAIL,
         password: process.env.API_TEST_USER_PASSWORD
+    },
+    OTPsetupDetails:
+    {
+        accountSid: process.env.TWILIO_SID,
+        authToken:process.env.TWILIO_AUTH_TOKEN,
+        phoneNumber:process.env.TWILIO_NUMBER
+
     }
 
 };

@@ -29,6 +29,9 @@ exports.seed = function (knex) {
                 isFacebook: config.apiTestUser.isFacebook,
                 isTwitter: config.apiTestUser.isTwitter,
                 isGoogle: config.apiTestUser.isGoogle,
+                userStatus: config.apiTestUser.userStatus,
+                referralCode: config.apiTestUser.referralCode,
+                invitedByReferralCode: config.apiTestUser.invitedByReferralCode,
                 password: userService.encryptPassword(config.apiTestUser.password),
                 created_at: new Date()
             }

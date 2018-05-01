@@ -11,6 +11,7 @@ exports.seed = function (knex) {
         return knex('user').insert([
             {
                 id: 1, 
+                userID: "WR/test",
                 userFirstname: config.apiTestUser.userFirstname,
                 userLastname: config.apiTestUser.userLastname,
                 userOthername: config.apiTestUser.userOthername,

@@ -7,6 +7,7 @@ let config = require('app/config/config');
 let errors = require('app/errors');
 let bcrypt = require('bcryptjs');
 let jwt = require('jsonwebtoken');
+let notifications  = require('app/lib/notifications');
 
 class AccountService {
 
@@ -18,6 +19,7 @@ class AccountService {
      */
     constructor(logger) {
         this.logger = logger;
+       // this.notifications = notificationService;
     }
 
     /**
@@ -97,7 +99,7 @@ class AccountService {
      * @returns {Promise.<TResult>}
      */
 
-    login(email, password) {
+    prologin(email, password) {
         let reqId = shortid.generate();
         this.logger.info(`Request ID: ${reqId} - Retrieve a professional with email: ${email}`);
 
@@ -155,6 +157,7 @@ class AccountService {
         let data = userData;
         data.password = this.constructor.encryptPassword(data.password);
         data.referralCode = this.generateReferralCode();
+        data.userID= generateUserID(1);
 
         return new User().save(data)
             .then((user) => {
@@ -282,6 +285,22 @@ class AccountService {
         
     }
 
+/**
+     * Phone Verification
+     *
+     * @param phoneNumber
+     * @returns {Promise.<TResult>}
+     */
+
+    phoneVerification(phoneNumber) {
+        this.logger.info(`Sending OTP to phone number: ${phoneNumber}`);
+        var getOTP = this.generateOTP()
+        var message = "Your OTP verification code is: " .getOTP;
+        
+      //  this.notifications.se
+ 
+    }
+
  /**
      * Genrate Referral Code
      *
@@ -290,6 +309,8 @@ class AccountService {
 
     generateReferralCode() 
     {
+        this.logger.info(`Generating Referal code: `);
+
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
       
@@ -297,6 +318,57 @@ class AccountService {
           text += possible.charAt(Math.floor(Math.random() * possible.length));
       
         return text;
+       
+     }
+
+      /**
+     * Genrate Referral Code
+     *@param identityCode (0-Admin, 1-User, 2- Admin,)
+     * @returns code
+     */
+
+    generateUserID(identityCode) 
+    {
+        var todayDate = new Date();
+        var person="";
+        var identity="";
+
+        if(identityCode == 1)
+        {
+
+             person +="user";
+             identity += "WR/"+identityCode + '/'+todayDate.getFullYear()+"/"+todayDate.getMonth()+"/"+todayDate.getTime();
+             return identity;
+        }
+        else
+            if(identityCode == 2){
+             person ="pro";
+             identity += "WR/"+identityCode + '/'+todayDate.getFullYear()+"/"+todayDate.getMonth()+"/"+todayDate.getTime();
+             return identity;
+        }
+        else{
+
+            return "WR- Admin";
+        }
+      
+       
+       
+     }
+
+      /**
+     *OTP CODE
+     *
+     * @returns code
+     */
+    generateOTP() 
+    {
+        var possibleOTPArr = "0123456789";
+        var otpmessage="";
+      
+        for (var i = 0; i < 5; i++)
+        otpmessage += possible.charAt(Math.floor(Math.random() * possible.length));
+      
+        return otpmessage;
        
      }
         

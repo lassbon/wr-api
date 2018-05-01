@@ -4,6 +4,7 @@ exports.up = function (knex) {
     return knex.schema
         .createTableIfNotExists('user', function (table) {
             table.bigincrements('id').primary();
+            table.string('userID');
             table.string('userFirstname');
             table.string('userLastname');
             table.string('userOthername');

@@ -11,7 +11,7 @@ const schema = joi.object().keys({
     userBVN: joi.string()
 
     // At least ONE of these parameters must be sent
-}).or('userFirstname', 'userLastname', 'userPhoneNumber', 'userAccountNumber', 'password', 'userBVN');
+}).or('userFirstname', 'userLastname', 'userOthername', 'userAddress', 'userAccountNumber', 'password', 'userBVN');
 
 module.exports = schema;
 

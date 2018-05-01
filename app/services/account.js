@@ -1,12 +1,14 @@
 'use strict';
 
 let User = require('app/models/user');
+let Pro = require('app/models/pro');
 let shortid = require('shortid');
 let constants = require('app/config/constants');
 let config = require('app/config/config');
 let errors = require('app/errors');
 let bcrypt = require('bcryptjs');
 let jwt = require('jsonwebtoken');
+
 let notifications  = require('app/lib/notifications');
 
 class AccountService {
@@ -99,30 +101,33 @@ class AccountService {
      * @returns {Promise.<TResult>}
      */
 
-    prologin(email, password) {
+    prologin(phone,password) {
+       
+        const phoneNumber = this.formatPhoneNumber(phone);
+
         let reqId = shortid.generate();
-        this.logger.info(`Request ID: ${reqId} - Retrieve a professional with email: ${email}`);
+        this.logger.info(`Request ID: ${reqId} - Retrieve a professional with phone: ${phone}`);
 
-        return new User({ userEmail: email })
+        return new User({ proPhoneNumber: phoneNumber })
             .fetch({ require: true })
-            .then(user => {
+            .then(pro => {
 
-                this.logger.info(`Request ID: ${reqId} - Retrieved pro `, user);
+                this.logger.info(`Request ID: ${reqId} - Retrieved pro `, pro);
 
-                return this.comparePasswords(password, user.get('password')).then((match) => {
+                return this.comparePasswords(password, pro.get('password')).then((match) => {
                     if (!match) {
 
                         throw new errors.PasswordMissmatch('Wrong password supplied');
                     }
 
-                    let payload = { id: user.id }; //only expose user-id in token
+                    let payload = { id: pro.id }; //only expose user-id in token
 
                     return { token: jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn }) };
 
                 });
             }).catch(error => {
 
-                this.logger.error(`Request ID: ${reqId} - Error retrieving user with email ${email}, 
+                this.logger.error(`Request ID: ${reqId} - Error retrieving user with email ${phoneNumber}, 
                 reason: ${error.message}`);
                 throw error;
             });
@@ -137,10 +142,77 @@ class AccountService {
      * @returns {Promise.<TResult>}
      */
 
-    facebooklogin(username, password) {
+    facebooklogin(email, password) {
     
 
         
+    }
+
+  /**
+     * Users Referral Code  
+     *
+     * @param email
+     * @returns {Promise.<TResult>}
+     */
+    usersReferralCode()
+    {
+        const email = req.params.userEmail;
+       
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a user with email: ${email}`);
+
+        const updateOps= {};
+        for(const op of req.body) {
+
+            updateOps[op.propName] = op.value;
+         }
+        return new User.update()
+       .fetch({ require: true })
+       .then(user => {
+
+           this.logger.info(`Request ID: ${reqId} - Retrieved user `, user);
+           //try to update user here
+           return user;
+       }).catch(error => {
+
+           this.logger.error(`Request ID: ${reqId} - Error retrieving user with email ${email}, 
+           reason: ${error.message}`);
+           throw error;
+       });
+
+    }
+
+    
+
+        
+    /**
+     * SignUp
+     *
+     * @param userData
+     * @returns {Promise.<TResult>}
+     */
+    proSignup(proData) {
+
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Creating a pro with data: ${JSON.stringify(proData)}`);
+
+        let data = proData;
+        data.password = this.constructor.encryptPassword(data.password);
+        data.referralCode = this.generateReferralCode();
+        data.proID= this.generateProID();
+
+        return new Pro().save(data)
+            .then((pro) => {
+                this.logger.info(`Request ID: ${reqId} - User created `, JSON.stringify(this.prologin));
+                delete pro.attributes.password;
+                
+                return pro;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error creating user with data ${JSON.stringify(userData)}, 
+                reason: ${error.message}`);
+                throw error;
+            });
     }
 
     /**
@@ -157,7 +229,7 @@ class AccountService {
         let data = userData;
         data.password = this.constructor.encryptPassword(data.password);
         data.referralCode = this.generateReferralCode();
-        data.userID= generateUserID(1);
+        data.userID= this.generateUserID();
 
         return new User().save(data)
             .then((user) => {
@@ -175,15 +247,15 @@ class AccountService {
     /**
      * Profile
      *
-     * @param email
+     * @param id
      * @returns {Promise.<TResult>}
      */
-    profile(email) {
+    profile(id) {
 
         let reqId = shortid.generate();
-        this.logger.info(`Request ID: ${reqId} - Retrieve a user with email: ${email}`);
+        this.logger.info(`Request ID: ${reqId} - Retrieve a user with id: ${id}`);
 
-        return new User({ userEmail: email })
+        return new User({ id: id })
        .fetch({ require: true })
        .then(user => {
 
@@ -191,12 +263,85 @@ class AccountService {
            return user;
        }).catch(error => {
 
-           this.logger.error(`Request ID: ${reqId} - Error retrieving user with email ${email}, 
+           this.logger.error(`Request ID: ${reqId} - Error retrieving user with id ${id}, 
            reason: ${error.message}`);
            throw error;
        });
     }
 
+
+      /**
+     * Update Profile
+     *
+     * @param id
+     * @returns {Promise.<TResult>}
+     */
+    updateprofile(userid, userData)
+     {
+       const id = userid;
+
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a user with id: ${id}`);
+        User
+        .where({id: id})
+        .save(userData,{patch:true})
+        .then(user => {
+           this.logger.info(`Request ID: ${reqId} - Update was succesful for user with id `, id);
+           return user;
+       }).catch(error => {
+
+           this.logger.error(`Request ID: ${reqId} - Error retrieving user with id ${id}, 
+           reason: ${error.message}`);
+           throw error;
+       });
+    }
+
+          /**
+     * Update Profile
+     *
+     * @param userid
+     * @returns {Promise.<TResult>}
+     */
+    updateReferralCode(userid,userData)
+     {
+       const id = userid;
+       const invitedByReferralCode = userData.invitedByReferralCode;
+
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a user with id: ${id}`);
+        /*If the function is used to update Referral code, 
+        check if referralcode is correct before proceeding
+        */
+       this.logger.info(`Request ID: ${reqId} - Verifying if the inivted referal code `, invitedByReferralCode, ' exists to any user '); 
+       User
+       .where({referralCode: invitedByReferralCode })
+       .fetch({ require: true })
+       .then(user => 
+        {
+             this.logger.info(`Request ID: ${reqId} - The inivited referal code `, invitedByReferralCode, ' exists and is correct to a user with id ', user.id);
+             this.logger.info(`Request ID: ${reqId} - Want to update the referral code to a user who invited the user with code  `, invitedByReferralCode);
+        User
+        .where({id: id})
+        .save(user,{patch:true})
+        .then((data) => {
+            this.logger.info(`Request ID: ${reqId} - Update was succesful on user with id `, id ," for invitedReferralcode ", invitedByReferralCode);
+            return data;
+        }).catch(error => {
+
+            this.logger.error(`Request ID: ${reqId} - Update on invitedreferral code cannot be done on user with id ${id}, 
+            reason: ${error.message}`);
+            throw error;
+        });
+
+  
+       })/*.catch(error => {
+
+        this.logger.error(`Request ID: ${reqId} - Error, Referral code, ${id}, does not exist
+        reason: ${error.message}`);
+        throw error;
+    });*/
+       
+    }
 
     /**
      * Find user by ID
@@ -327,33 +472,33 @@ class AccountService {
      * @returns code
      */
 
-    generateUserID(identityCode) 
-    {
+        generateUserID() 
+        {
+            var identityCode="USER";
+            var todayDate = new Date();
+            var person="";
+            var identity="";
+
+            person +="user";
+                identity += "WR/"+identityCode + '/'+todayDate.getFullYear()+"/"+todayDate.getMonth()+"/"+todayDate.getTime();
+                return identity;
+         }
+
+    generateProID() 
+    { 
+        var identityCode="PRO";
         var todayDate = new Date();
         var person="";
         var identity="";
+        identity += "WR/"+identityCode + '/'+todayDate.getFullYear()+"/"+todayDate.getMonth()+"/"+todayDate.getTime();
+        
+        return identity;
+    }
 
-        if(identityCode == 1)
-        {
-
-             person +="user";
-             identity += "WR/"+identityCode + '/'+todayDate.getFullYear()+"/"+todayDate.getMonth()+"/"+todayDate.getTime();
-             return identity;
-        }
-        else
-            if(identityCode == 2){
-             person ="pro";
-             identity += "WR/"+identityCode + '/'+todayDate.getFullYear()+"/"+todayDate.getMonth()+"/"+todayDate.getTime();
-             return identity;
-        }
-        else{
-
-            return "WR- Admin";
-        }
-      
-       
-       
-     }
+    generateAdminID() 
+    { 
+    return "WR- ADMIN";
+    }
 
       /**
      *OTP CODE

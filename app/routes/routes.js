@@ -84,28 +84,6 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
         }
     }, (req, res, next) => account.login(req, res, next));
 
-     
-    server.post({
-        path: '/pro/login',
-        name: 'Pro Login',
-        version: '1.0.0',
-        validation: {
-            body: require('app/validations/login')
-        }
-    }, (req, res, next) => account.prologin(req, res, next));
-
-
-    server.post({
-        path: '/pro/signup',
-        name: 'Pro Signup',
-        version: '1.0.0',
-        validation: {
-            body: require('app/validations/user_signup')
-        }
-    }, (req, res, next) => account.prosignup(req, res, next));
-
-
-
     server.post({
         path: '/users/login/facebook',
         name: 'User Facebook Login',
@@ -115,7 +93,6 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
         }
     }, (req, res, next) => account.facebooklogin(req, res, next));
 
-
     server.post({
         path: '/users/signup',
         name: 'User Signup',
@@ -124,6 +101,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
             body: require('app/validations/user_signup')
         }
     }, (req, res, next) => account.signup(req, res, next));
+
 
 /**
      * User profile 
@@ -135,6 +113,76 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
         version: '1.0.0',
  
     }, (req, res, next) => account.profile(req, res, next));
+
+
+     /**
+     * User Referral code 
+     * Update the Pro profile
+     */
+    server.patch({
+        path: '/users/referalcode/:id',
+        name: 'Users referal code',
+        version: '1.0.0',
+         validation: {
+           // body: require('app/validations/user_updateprofile')
+        }
+ 
+    }, (req, res, next) => account.usersReferralCode(req, res, next));
+    
+
+   
+/**
+     * User profile 
+     * Update the Users profile
+     */
+    server.patch({
+        path: '/users/profile/:id',
+        name: 'user UpdateProfile',
+        version: '1.0.0',
+         validation: {
+            body: require('app/validations/user_updateprofile')
+        }
+ 
+    }, (req, res, next) => account.updateProfile(req, res, next));
+    
+
+/**
+ * PATCH
+     * User Referaal Code 
+     * Update the Referal code for Users
+**/
+server.patch({
+    path: '/users/referralcode/:id',
+    name: 'user Referral Code',
+    version: '1.0.0',
+    validation:{
+        body: require('app/validations/referralcode')
+    }
+   
+}, (req, res, next) => account.usersReferralCode(req, res, next));
+
+
+     
+    server.post({
+        path: '/pro/login',
+        name: 'Pro Login',
+        version: '1.0.0',
+        validation: {
+            body: require('app/validations/login')
+        }
+    }, (req, res, next) => account.prologin(req, res, next));
+
+    
+
+    server.post({
+        path: '/pro/signup',
+        name: 'Pro Signup',
+        version: '1.0.0',
+        validation: {
+            body: require('app/validations/pro_signup')
+        }
+    }, (req, res, next) => account.proSignup(req, res, next));
+
 
     /**
      * Pro profile 
@@ -163,36 +211,21 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
     }, (req, res, next) => account.updateProProfile(req, res, next));
     
 
-
-/**
-     * User profile 
-     * Update the Users profile
-     */
-    server.patch({
-        path: '/users/profile/:id',
-        name: 'user UpdateProfile',
-        version: '1.0.0',
-         validation: {
-            body: require('app/validations/user_updateprofile')
-        }
- 
-    }, (req, res, next) => account.updateProfile(req, res, next));
-    
-
     /**
      * User profile 
      * Update the Users profile
-
+**/
     server.post({
-        path: '/profile',
-        name: 'Profile',
+        path: '/otpverification',
+        name: 'OTP Verification',
         version: '1.0.0',
         validation: {
-            body: require('app/validations/update_profile')
+            body: require('app/validations/phoneNumber_otp')
         }
  
-    }, (req, res, next) => account.profile(req, res, next));
-    **/
+    }, (req, res, next) => account.otpverfication(req, res, next));
+  
+
 
     if (config.environment !== 'production') {
 

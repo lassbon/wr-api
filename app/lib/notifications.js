@@ -3,7 +3,8 @@
 let constants = require('app/config/constants');
 let config = require('app/config/config');
 let errors = require('app/errors');
-let client = require('twilio')(accountSid, authToken);
+let client = require('twilio');
+
 
 
 class NotificationService {

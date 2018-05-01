@@ -146,6 +146,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
     }, (req, res, next) => account.updateProfile(req, res, next));
     
 
+
 /**
  * PATCH
      * User Referaal Code 
@@ -162,7 +163,10 @@ server.patch({
 }, (req, res, next) => account.usersReferralCode(req, res, next));
 
 
-     
+     /**
+     * Pro Login 
+     * Pro Login to get a JWT
+     */
     server.post({
         path: '/pro/login',
         name: 'Pro Login',
@@ -173,7 +177,10 @@ server.patch({
     }, (req, res, next) => account.prologin(req, res, next));
 
     
-
+ /**
+     * Pro Signup 
+     * get the Professionals profile
+     */
     server.post({
         path: '/pro/signup',
         name: 'Pro Signup',
@@ -182,6 +189,20 @@ server.patch({
             body: require('app/validations/pro_signup')
         }
     }, (req, res, next) => account.proSignup(req, res, next));
+
+        
+ /**
+     * Pro Facebook login 
+     * get the Professionals profile
+     */
+    server.post({
+        path: '/pro/facebook/login',
+        name: 'Pro Facebook Login',
+        version: '1.0.0',
+        validation: {
+            body: require('app/validations/login')
+        }
+    }, (req, res, next) => account.proFacebookLogin(req, res, next));
 
 
     /**
@@ -205,7 +226,7 @@ server.patch({
         name: 'Pro updateProfile',
         version: '1.0.0',
          validation: {
-            body: require('app/validations/user_updateprofile')
+            body: require('app/validations/pro_updateprofile')
         }
  
     }, (req, res, next) => account.updateProProfile(req, res, next));

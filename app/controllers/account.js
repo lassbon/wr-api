@@ -75,6 +75,38 @@ class AccountController {
             }
         }).then(next);
     }
+    
+
+      /**
+     * Endpoint Post /users/facebook/login
+     * Login to obtain a jwt
+     * @param req
+     * @param res
+     * @param next
+     */
+    proFacebookLogin(req, res, next) {
+
+        this.service.proFacebookLogin(req.body.email, req.body.password)   
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((err) => {
+            switch (err.constructor){
+                case errors.UserNotFound:
+                    res.send(httpStatus.UNAUTHORIZED,
+                        new errors.Unauthorized('Unauthorized'));
+                    break;
+                case errors.PasswordMissmatch:
+                    res.send(httpStatus.UNAUTHORIZED,
+                        new errors.Unauthorized('Unauthorized'));
+                    break;
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error'));
+            }
+        }).then(next);
+    }
+
 
     /**
      * Endpoint Post /pro/login
@@ -185,6 +217,34 @@ class AccountController {
         }).then(next);
     }
 
+
+      /**
+     * Endpoint GET /users/profile/:id
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    proProfile(req, res, next) {
+
+        this.service.proProfile(req.params.id)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            switch (error.constructor){
+                case errors.ProNotFound:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.ProNotFound('The pro with the id does not exists'));
+                    break;
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+            }
+        }).then(next);
+    }
+
+
     /**
      * Endpoint PATCH /users/updateProfile/:id
      * Signup 
@@ -203,6 +263,33 @@ class AccountController {
                 case errors.UserNotFound:
                     res.send(httpStatus.INTERNAL_SERVER_ERROR,
                         new errors.UserNotFound('The user with the email does not exists'));
+                    break;
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+            }
+        }).then(next);
+    }
+
+
+     /**
+     * Endpoint PATCH /pro/updateProfile/:id
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    updateProProfile(req, res, next) {
+
+        this.service.updateProProfile(req.params.id, req.body)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            switch (error.constructor){
+                case errors.UserNotFound:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.ProNotFound('The pro with the id does not exists'));
                     break;
                 default:
                     res.send(httpStatus.INTERNAL_SERVER_ERROR,

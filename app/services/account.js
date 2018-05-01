@@ -148,6 +148,20 @@ class AccountService {
         
     }
 
+      /**
+     * Facebook Login 
+     *
+     * @param email
+     * @param password
+     * @returns {Promise.<TResult>}
+     */
+
+    proFacebookLogin(email, password) {
+    
+
+        
+    }
+    
   /**
      * Users Referral Code  
      *
@@ -270,7 +284,33 @@ class AccountService {
     }
 
 
-      /**
+     /**
+     * Pro Profile
+     *
+     * @param id
+     * @returns {Promise.<TResult>}
+     */
+    proProfile(id) {
+
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a pro with id: ${id}`);
+
+        return new Pro({ id: id })
+       .fetch({ require: true })
+       .then(pro => {
+
+           this.logger.info(`Request ID: ${reqId} - Retrieved pro `, pro);
+           return pro;
+       }).catch(error => {
+
+           this.logger.error(`Request ID: ${reqId} - Error retrieving pro with id ${id}, 
+           reason: ${error.message}`);
+           throw error;
+       });
+    }
+
+
+    /**
      * Update Profile
      *
      * @param id
@@ -296,8 +336,36 @@ class AccountService {
        });
     }
 
-          /**
-     * Update Profile
+    /**
+     * Update Pro Profile
+     *
+     * @param id
+     * @returns {Promise.<TResult>}
+     */
+    updateProProfile(proid, proData)
+     {
+       const id = proid;
+
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a pro with id: ${id}`);
+        Pro
+        .where({id: id})
+        .save(proData,{patch:true})
+        .then(pro => {
+           this.logger.info(`Request ID: ${reqId} - Update was succesful for pro with id `, id);
+          
+           return pro;
+       }).catch(error => {
+
+           this.logger.error(`Request ID: ${reqId} - Error retrieving pro with id ${id}, 
+           reason: ${error.message}`);
+           throw error;
+       });
+    }
+
+
+/**
+     * Update Referal Code
      *
      * @param userid
      * @returns {Promise.<TResult>}

@@ -84,15 +84,34 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
         }
     }, (req, res, next) => account.login(req, res, next));
 
-    server.post({
-        path: '/users/login/facebook',
+    server.get({
+        path: '/users/facebook/login',
         name: 'User Facebook Login',
         version: '1.0.0',
         validation: {
             body: require('app/validations/login')
         }
-    }, (req, res, next) => account.facebooklogin(req, res, next));
+    }, (req, res, next) => passport.authenticate('facebook'));
+    
+    server.get({
+        path: '/auth/facebook/callback',
+        name: 'User Facebook Login',
+        version: '1.0.0',
+        validation: {
+            body: require('app/validations/login')
+        }
+    }, (req, res, next) => passport.authenticate('facebook', { failureRedirect: '/' }
+    ));
+    
+ 
+  
+    //account.facebooklogin(req, res, next));
 
+
+   
+
+
+  
     server.post({
         path: '/users/signup',
         name: 'User Signup',
@@ -246,6 +265,122 @@ server.patch({
  
     }, (req, res, next) => account.otpverfication(req, res, next));
   
+/**
+ * PATCH
+     * Pro Referaal Code 
+     * Update the Referal code for Pro
+**/
+server.patch({
+    path: '/pro/referralcode/:id',
+    name: 'pro Referral Code',
+    version: '1.0.0',
+    validation:{
+        body: require('app/validations/referralcode')
+    }
+   
+}, (req, res, next) => account.proReferralCode(req, res, next));
+
+
+/***************** CBT QUESTIONS ROUTE  *****************/
+
+/**ADMIN
+ * GET
+ *Get All CBT questions
+**/
+server.get({
+    path: '/admin/questions',
+    name: 'GET CBT QUESTIONS',   
+}, (req, res, next) => account.allcbtquestions(req, res, next));
+
+/**ADMIN
+ * GET
+ *Get All CBT questions
+**/
+server.get({
+    path: '/admin/question/:id',
+    name: 'GET CBT QUESTION',   
+}, (req, res, next) => account.cbtquestion(req, res, next));
+
+/**ADMIN
+ * GET
+ *Get All Pro
+**/
+server.get({
+    path: '/admin/pro/',
+    name: 'GET ALL PRO',   
+}, (req, res, next) => account.pro(req, res, next));
+
+
+/**ADMIN
+ * GET
+ *Get All Users
+**/
+server.get({
+    path: '/admin/users/',
+    name: 'GET ALL Users',   
+}, (req, res, next) => account.users(req, res, next));
+
+
+/**ADMIN
+ * GET
+ *Get a Single Users
+**/
+server.get({
+    path: '/admin/user/:id',
+    name: 'GET Single User',   
+}, (req, res, next) => account.getuser(req, res, next));
+
+
+
+
+/**ADMIN
+ * GET
+ *Get Single Pro
+**/
+server.get({
+    path: '/admin/pro/:id',
+    name: 'GET PRO',   
+}, (req, res, next) => account.getpro(req, res, next));
+
+
+
+
+/**ADMIN
+ * POST
+ *Add All CBT questions
+**/
+server.post({
+    path: '/admin/question',
+    name: 'ADD CBT QUESTION',   
+}, (req, res, next) => account.addcbt(req, res, next));
+
+
+/**ADMIN
+ * PATCH
+ *EDIT  CBT questions
+**/
+server.patch({
+    path: '/admin/question/:id',
+    name: 'Edit CBT QUESTION',
+    validation:{
+        body: require('app/validations/update_cbtquestion')
+    }
+}, (req, res, next) => account.editcbt(req, res, next));
+
+/**
+* Image Upload
+* 
+**/
+server.post({
+    path: '/imageupload',
+    name: 'Upload Images',
+    version: '1.0.0',
+    validation: {
+       // body: require('app/validations/imageupload')
+    }
+
+}, (req, res, next) => account.imageUpload(req, res, next));
+
 
 
     if (config.environment !== 'production') {

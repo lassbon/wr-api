@@ -324,6 +324,270 @@ class AccountController {
         }).then(next);
        
 }
+
+
+      /**
+     * Endpoint PATCH /pro/referralcode/:id
+     * Referral code 
+     * @param req (id)
+     * @param res
+     * @param next
+     */
+    proReferralCode(req, res, next) {
+       
+        this.service.proUpdateReferralCode(req.params.id, req.body)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            switch (error.constructor){
+                case errors.UserNotFound:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.UserNotFound('The pro with the id does not exists'));
+                    break;
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+            }
+        }).then(next);
+       
+}
+
+
+    /**
+     * Endpoint GET /admin/questions
+     * GET ASTIONS 
+     * @param req
+     * @param res
+     * @param next
+     */
+    allcbtquestions(req, res, next) {
+
+        this.service.allcbtquestions()
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+    
+        }).then(next);
+    }
+
+
+      /**
+     * Endpoint GET /admin/pro
+     * GET ALL PRO 
+     * @param req
+     * @param res
+     * @param next
+     */
+    pro(req, res, next) {
+
+        this.service.pro()
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+    
+        }).then(next);
+    }
+
+
+        /**
+     * Endpoint GET /admin/pro
+     * GET ALL USERS 
+     * @param req
+     * @param res
+     * @param next
+     */
+    users(req, res, next) {
+
+        this.service.users()
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+    
+        }).then(next);
+    }
+
+         /**
+     * Endpoint GET /admin/user/:id
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    getuser(req, res, next) {
+
+        this.service.getuser(req.params.id)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+    
+        }).then(next);
+    }
+
+      /**
+     * Endpoint GET /admin/pro/:id
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    getpro(req, res, next) {
+
+        this.service.getpro(req.params.id)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+    
+        }).then(next);
+    }
+
+
+        /**
+     * Endpoint GET /admin/cbt/:id
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    getcbt(req, res, next) {
+
+        this.service.cbt()
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+    
+        }).then(next);
+    }
+
+
+        /**
+     * Endpoint GET /admin/cbtquestion/:id
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    
+    cbtquestion(req, res, next) {
+
+        this.service.cbtquestion(req.params.id)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+    
+        }).then(next);
+    }
+    
+        /**
+     * Endpoint GET /admin/addcbt/
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    addcbt(req, res, next) {
+
+        this.service.addcbt(req.body)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+    
+        }).then(next);
+    }
+
+         /**
+     * Endpoint PATCH /pro/updateProfile/:id
+     * Signup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    editcbt(req, res, next) {
+
+        this.service.editcbt(req.params.id, req.body)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            switch (error.constructor){
+               /* case errors.UserNotFound:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.ProNotFound('The pro with the id does not exists'));
+                    break;
+                    */
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+            }
+        }).then(next);
+    }
+
+
+    imageUpload(){
+        this.service.imageUpload(req.params.id, req.body)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            switch (error.constructor){
+               /* case errors.UserNotFound:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.ProNotFound('The pro with the id does not exists'));
+                    break;
+                    */
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+            }
+        }).then(next);
+
+    }
+
+    
+
+    otpverification(){
+        this.service.otpverification(req.body)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            switch (error.constructor){
+               /* case errors.UserNotFound:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.ProNotFound('The pro with the id does not exists'));
+                    break;
+                    */
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+            }
+        }).then(next);
+
+    }
 }
 
 module.exports = AccountController;

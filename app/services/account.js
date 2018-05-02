@@ -2,6 +2,7 @@
 
 let User = require('app/models/user');
 let Pro = require('app/models/pro');
+let Cbt = require('app/models/cbtquestions');
 let shortid = require('shortid');
 let constants = require('app/config/constants');
 let config = require('app/config/config');
@@ -365,7 +366,7 @@ class AccountService {
 
 
 /**
-     * Update Referal Code
+     * User Update Referal Code
      *
      * @param userid
      * @returns {Promise.<TResult>}
@@ -390,7 +391,7 @@ class AccountService {
              this.logger.info(`Request ID: ${reqId} - Want to update the referral code to a user who invited the user with code  `, invitedByReferralCode);
         User
         .where({id: id})
-        .save(user,{patch:true})
+        .save(userData,{patch:true})
         .then((data) => {
             this.logger.info(`Request ID: ${reqId} - Update was succesful on user with id `, id ," for invitedReferralcode ", invitedByReferralCode);
             return data;
@@ -410,6 +411,262 @@ class AccountService {
     });*/
        
     }
+
+
+/**
+     * Pro Update Referal Code
+     *
+     * @param userid
+     * @returns {Promise.<TResult>}
+     */
+    proUpdateReferralCode(proid, proData)
+     {
+       const id = proid;
+       const invitedByReferralCode = proData.invitedByReferralCode;
+
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a user with id: ${id}`);
+        /*If the function is used to update Referral code, 
+        check if referralcode is correct before proceeding
+        */
+       this.logger.info(`Request ID: ${reqId} - Verifying if the inivted referal code `, invitedByReferralCode, ' exists to any PRO '); 
+       Pro
+       .where({referralCode: invitedByReferralCode })
+       .fetch({ require: true })
+       .then(pro => 
+        {
+             this.logger.info(`Request ID: ${reqId} - The inivited referal code `, invitedByReferralCode, ' exists and is correct to a pro with id ', pro.id);
+             this.logger.info(`Request ID: ${reqId} - Want to update the referral code to a user who invited the user with code  `, invitedByReferralCode);
+        Pro
+        .where({id: id})
+        .save(pro,{patch:true})
+        .then((data) => {
+            this.logger.info(`Request ID: ${reqId} - Update was succesful on user with id `, id ," for invitedReferralcode ", invitedByReferralCode);
+            return data;
+        }).catch(error => {
+
+            this.logger.error(`Request ID: ${reqId} - Update on invitedreferral code cannot be done on user with id ${id}, 
+            reason: ${error.message}`);
+            throw error;
+        });
+
+  
+       })/*.catch(error => {
+
+        this.logger.error(`Request ID: ${reqId} - Error, Referral code, ${id}, does not exist
+        reason: ${error.message}`);
+        throw error;
+    });*/
+       
+    }
+
+ /**
+     * GET ALL CBT questions
+     *
+     
+     */
+    allcbtquestions()
+    {
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Getting all cbt  questions`);
+
+        return new Cbt()
+        .fetchAll()
+        .then((data) => {
+                this.logger.info(`Request ID: ${reqId} - getting all CBT question `, JSON.stringify(data));
+                                
+                return data;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error getting the CBT question with data ${JSON.stringify(data)}, 
+                reason: ${error.message}`);
+                throw error;
+            });
+
+    }
+
+    
+
+     /**
+     * GET ALL CBT questions
+     *
+     
+     */
+    pro()
+    {
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Getting all pro`);
+
+        return new Pro()
+        .fetchAll()
+        .then((data) => {
+                this.logger.info(`Request ID: ${reqId} - getting all Pro `, JSON.stringify(data));
+                                
+                return data;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error getting the CBT question with data ${JSON.stringify(data)}, 
+                reason: ${error.message}`);
+                throw error;
+            });
+
+    }
+
+     /**
+     * EDIT CBT questions
+     * /PATCH
+     }
+     */
+    editcbt(questionid, data){
+
+       const id = questionid;
+       const questionsdata = data;
+
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Retrieve a cbt question with id: ${id}`);
+
+        this.logger.info(`Request ID: ${reqId} - Want to update question with question id `, id);
+        Cbt
+        .where({id: id})
+        .save(questionsdata,{patch:true})
+        .then((questionsdata) => {
+            this.logger.info(`Request ID: ${reqId} - Update was succesful on question with id `, id);
+            return data;
+        }).catch(error => {
+
+            this.logger.error(`Request ID: ${reqId} - Update on question  cannot be done with question id ${id}, 
+            reason: ${error.message}`);
+            throw error;
+        });
+
+
+    }
+
+    /**
+     * POST CBT questions
+     *
+     }
+     */
+    addcbt(cbtdata){
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Creating a cbt with question: ${JSON.stringify(cbtdata)}`);
+
+        let data = cbtdata;
+       // data.questionID = this.generateCbtID();
+
+        return new Cbt().save(data)
+            .then((cbt) => {
+                this.logger.info(`Request ID: ${reqId} - CBT question created `, JSON.stringify(this.data));
+                                
+                return cbt;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error creating CBT question with data ${JSON.stringify(data)}, 
+                reason: ${error.message}`);
+                throw error;
+            });
+    }
+
+
+    
+     /**
+     * POST CBT questions
+     *
+     }
+     */
+    cbtquestion(id){
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} -Get cbt with question id: ${(id)}`);
+
+        return new Cbt()
+        .where({id: id})
+        .fetch({ require: true })
+        .then((cbt) => 
+        {
+            this.logger.info(`Request ID: ${reqId} - CBT question fetched:  `, JSON.stringify(cbt));
+            return cbt;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error fetching CBT question with id ${(id)}, 
+                reason: ${error.message}`);
+                throw error;
+            });
+    }
+    
+ /**
+     * GET SINGLE PRO
+     *
+     }
+     */
+    getpro(id){
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} -Get a pro with id: ${(id)}`);
+
+        return new Pro()
+        .where({id: id})
+        .fetch({ require: true })
+        .then((data) => 
+        {
+            this.logger.info(`Request ID: ${reqId} - Pro details fetched:  `, JSON.stringify(data));
+            return data;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error fetching Pro with id ${(id)}, 
+                reason: ${error.message}`);
+                throw error;
+            });
+    }
+
+
+        
+ /**
+     * GET SINGLE PRO
+     *
+     }
+     */
+    getuser(id){
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} -Get a User with id: ${(id)}`);
+
+        return new User()
+        .where({id: id})
+        .fetch({ require: true })
+        .then((data) => 
+        {
+            this.logger.info(`Request ID: ${reqId} - User details fetched:  `, JSON.stringify(data));
+            return data;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error fetching User with id ${(id)}, 
+                reason: ${error.message}`);
+                throw error;
+            });
+    }
+
+    
+     /**
+     * GET ALL USERS
+     *
+     }
+     */
+    users(){
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} -Get a Users`);
+
+        return new User()
+        .fetchAll()
+        .then((data) => 
+        {
+            this.logger.info(`Request ID: ${reqId} - All users Data details fetched:  `, JSON.stringify(data));
+            return data;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error fetching Pro with id,  
+                reason: ${error.message}`);
+                throw error;
+            });
+    }
+
 
     /**
      * Find user by ID
@@ -465,6 +722,52 @@ class AccountService {
                 throw error;
             });
     }
+
+
+
+     /**
+     * EDIT CBT questions
+     * /PATCH
+     }
+     */
+    imageUpload(id, data){
+
+        const tempPath = req.files.file.path,
+        targetPath = path.resolve('./uploads/image.png');
+ 
+         let reqId = shortid.generate();
+         this.logger.info(`Request ID: ${reqId} - Retrieve a cbt question with id: ${id}`);
+ 
+         this.logger.info(`Request ID: ${reqId} - Want to update question with question id `, id);
+         Cbt
+         .where({id: id})
+         .save(questionsdata,{patch:true})
+         .then((questionsdata) => {
+             this.logger.info(`Request ID: ${reqId} - Update was succesful on question with id `, id);
+             return data;
+         }).catch(error => {
+ 
+             this.logger.error(`Request ID: ${reqId} - Update on question  cannot be done with question id ${id}, 
+             reason: ${error.message}`);
+             throw error;
+         });
+ 
+ 
+     }
+
+
+     otpverification(phoneNumber){
+
+        const number = phoneNumber;
+        const otp = this.generateOTP();
+        const messageBody = " Your OTP code is: ". otp;
+
+
+       //shoud send the opt message calling the nofication service here and retun promises 
+ 
+     }
+
+
     /**
      * Format Phone Number
      *
@@ -584,6 +887,18 @@ class AccountService {
         return otpmessage;
        
      }
+
+   /**
+    *   generateCbtID(){
+  
+        var todayDate = new Date();
+        var cbtID="";
+        cbtID += todayDate.getFullYear()+todayDate.getMonth()+todayDate.getDay()+todayDate.getTime();
+        
+        return cbtID;
+       
+     }
+     **/
         
 
 

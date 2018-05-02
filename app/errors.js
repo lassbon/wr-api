@@ -25,9 +25,11 @@ module.exports = {
     Unauthorized: create('Unauthorized', { code: 'UNAUTHORIZED' }),
 
     UserExists: create('UserExists', { code: 'USER_EXISTS' }),
-
+    ProExists: create('ProExists', { code: 'PRO_EXISTS' }),
+    
     //this exception will only be used internally and will never get thrown to client
     UserNotFound: create('UserNotFound', { code: 'USER_NOT_FOUND' }),
+    ProNotFound: create('ProNotFound', { code: 'PRO_NOT_FOUND' }),
 
     //this exception will only be used internally and will never get thrown to client
     PasswordMissmatch: create('PasswordMissmatch', { code: 'PASSWORD_MISSMATCH' }),

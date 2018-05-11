@@ -3,14 +3,19 @@
 let joi = require('joi');
 
 module.exports = {
-    userFirstname: joi.string().required(),
-    userLastname: joi.string().required(),
-    userAddress: joi.string().required(),
-   // userPhoneNumber: joi.string().required(),
-    userEmail: joi.string().email().required(),
-   // userAccountNumber: joi.string().required(),
+  body: {
+    firstname: joi.string().required(),
+    lastname: joi.string().required(),
+    address: joi.string().required(),
+    phone: joi.string().required(),
+    email: joi.string().email().required(),
+    account_number: joi.string().required(),
     password: joi.string().required(),
-  //  userBVN: joi.string().required()
+    bvn: joi.string().required()
+  },
+  params: {
+    type: joi.string().required()
+  }
 };
 
 

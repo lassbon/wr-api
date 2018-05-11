@@ -2,15 +2,20 @@
 
 exports.up = function (knex) {
     return knex.schema
-        .createTableIfNotExists('user', function (table) {
+        .createTableIfNotExists('user_type', function (table) {
+            table.bigincrements('id').primary();
+            table.string('name');
+            table.timestamps(true, true);
+        })
+        .createTableIfNotExists('users', function (table) {
             table.bigincrements('id').primary();
             table.string('user_id');
             table.string('firstname');
             table.string('lastname');
             table.string('othername');
-            table.string('phone');
+            table.string('phone').notNullable().unique();
             table.string('address');
-            table.string('emal').notNullable().unique();
+            table.string('email').notNullable().unique();
             table.string('dob');
             table.string('country');
             table.string('state');
@@ -20,19 +25,22 @@ exports.up = function (knex) {
             table.integer('bvn');
             table.boolean('terms');
             table.boolean('is_approved');
+            table.boolean('is_activated');
             table.boolean('is_facebook');
             table.boolean('is_twitter');
             table.boolean('is_google');
             table.string('status');
-            table.integer('user_type_id');
+            table.biginteger('usertype_id').unsigned().notNullable().references('id').inTable('user_type').index();
             table.string('referral_code');
             table.string('is_referral_invite');
             table.string('password');
+            table.string('otp');
             table.timestamps(true, true);
         });
 };
 
 exports.down = function (knex) {
     return knex.schema
-        .dropTableIfExists('user');
+        .dropTableIfExists('users')
+        .dropTableIfExists('user_type');
 };

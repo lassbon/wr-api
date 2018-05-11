@@ -3,62 +3,48 @@
 let constants = require('app/config/constants');
 let config = require('app/config/config');
 let errors = require('app/errors');
-let client = require('twilio');
 
 
 
-class NotificationService {
+class Notification {
 
     /**
      * Notification service constructor
      *
      * @constructor
      * @param {logger} logger instance of the logger
+     * @param {smsClient} smsClient instance of an smsClient
      */
-    constructor(logger) {
+    constructor(logger, smsClient) {
+        this.smsClient = smsClient;
         this.logger = logger;
     }
 
-
-
     /**
-     * send OTP
+     * send OTP Via sms
      *
      * @param phoneNumber
      * @param messageBody
      * @return {Promise}
      */
-    sendSMS(customerPhoneNumber, messageBody)
-     {
-        // Twilio Credentials
-        const accountSid = config.accountSid;
-        const authToken = config.authToken;
-        const phoneNumber = config.phoneNumber;
+    sendSms(receiverPhone, message) {
+        const senderPhone = config.OTPsetupDetails.phoneNumber;
+        this.logger.info(`Sending sms: ${message} to phone: ${receiverPhone}`);
 
-        client.messages
+        return this.smsClient.messages
         .create({
-              to: customerPhoneNumber,
-            from: phoneNumber,
-            body: messageBody,
-        }).then((data) => 
-        {
-            res.send(httpStatus.OK, data);
-
-        }).catch((error) => {
-            switch (error.constructor){
-                case errors.customerPhoneNumberNotFound:
-                case errors.customerPhoneNumberInCorrect:
-                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
-                        new errors.UserExists('The Customer PhoneNumber is not spplied or incorrect'));
-                    break;
-                case errors.messageBodyIsEmpty:
-                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
-                        new errors.EmptyMessage('MEssage body cannot be empty'));
-                default:
-                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
-                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
-            }
-        }).then(next);
+            to: receiverPhone,
+            from: senderPhone,
+            body: message,
+        })
+        .then((message) => {
+            this.logger.info(`Successfully sent sms and got response: ${JSON.stringify(message)}`);
+            return message;
+        })
+        .catch((error) => {
+            this.logger.error(`There was an error while sending sms: ${error}`);
+            throw error;
+        });
     
     }
 
@@ -70,19 +56,11 @@ class NotificationService {
      * @param emailBody
      * @return {Promise}
      */
-    sendEMAIL(customerEmail, emailBody)
-     {
-
-        
-
-     }
-
-
-
-
-
+    sendMail(customerEmail, emailBody){
+        // TODO: add mail sending client
+    }
    
 }
 
-module.exports = NotificationService;
+module.exports = Notification;
 

@@ -5,10 +5,10 @@ let config = require('app/config/config');
 
 exports.seed = function (knex) {
     // Deletes ALL existing entries
-    return knex('user').del()
+    return knex('users').del()
       .then(function () {
         // Inserts seed entries
-        return knex('user').insert([
+        return knex('users').insert([
             {
                 id: 1, 
                 user_id: "WR/test",
@@ -31,7 +31,7 @@ exports.seed = function (knex) {
                 is_twitter: config.apiTestUser.isTwitter,
                 is_google: config.apiTestUser.isGoogle,
                 status: config.apiTestUser.userStatus,
-                user_type_id: 1,
+                usertype_id: 1,
                 referral_code: config.apiTestUser.referralCode,
                 is_referral_invite: config.apiTestUser.invitedByReferralCode,
                 password: userService.encryptPassword(config.apiTestUser.password),

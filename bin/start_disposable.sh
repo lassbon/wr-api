@@ -27,7 +27,7 @@ docker run \
 --env-file=${ROOT}/.env \
 --network=progo_main_network \
 ${IMAGE_NAME} \
-sh -c "npm install && npm install -g nodemon && bash"
+sh -c "npm install && bash"
 
 echo " ----- EXITED from disposable container -----"
 echo " ----- Removing Exited Containers -----"

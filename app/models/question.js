@@ -3,8 +3,8 @@
 let bookshelf = require('app/bookshelf');
 let errors = require('app/errors');
 
-let Cbt_questions = bookshelf.Model.extend({
-    tableName: 'cbtquestions',
+let Question = bookshelf.Model.extend({
+    tableName: 'questions',
     hasTimestamps: true,
     hidden: ['created_at'],
 
@@ -14,22 +14,10 @@ let Cbt_questions = bookshelf.Model.extend({
                 if (error instanceof Question.NotFoundError) {
                     throw new errors.QuestionNotFound('Question not found');
                 }
-
-                throw error;
-            });
-    },
-
-    save:  function () {
-        return bookshelf.Model.prototype.save.apply(this, arguments)
-            .catch(error => {
-                if (error.code === 'ER_DUP_ENTRY') {
-                    throw new errors.QuestionExists('The Question already exists');
-                }
-
                 throw error;
             });
     }
 
 });
 
-module.exports = bookshelf.model('cbt_question', Cbt_questions);
+module.exports = bookshelf.model('Question', Question);

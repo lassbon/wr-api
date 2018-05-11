@@ -3,15 +3,16 @@
 let joi = require('joi');
 
 const schema = joi.object().keys({
-    userFirstname: joi.string(),
-    userLastname: joi.string(),
-    userPhoneNumber: joi.string(),
-    userAccountNumber: joi.string(),
+    firstname: joi.string(),
+    lastname: joi.string(),
+    phone: joi.string(),
+    account_number: joi.string(),
+    account_name: joi.string(),
     password: joi.string(),
-    userBVN: joi.string()
+    bvn: joi.string()
 
     // At least ONE of these parameters must be sent
-}).or('userFirstname', 'userLastname', 'userOthername', 'userAddress', 'userAccountNumber', 'password', 'userBVN');
+}).or('firstname', 'lastname', 'othername', 'address', 'account_number', 'account_name', 'password', 'bvn');
 
 module.exports = schema;
 

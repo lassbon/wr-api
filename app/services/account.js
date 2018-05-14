@@ -157,12 +157,15 @@ class AccountService extends ResourceService {
         return User.query(query)
             .fetch({ require: true })
             .then((user) => {
-
                 this.logger.info(`Request ID: ${reqId} - Retrieved user ${JSON.stringify(user)} Verifying OTP...`);
                 return this.compareUserOtp(user.get('otp'), data.otp);
             })
             .then((user) => {
-                this.logger.info(`Request ID: ${reqId} - The OTP is valid`);
+                this.logger.info(`Request ID: ${reqId} - The OTP is valid, going to update user to active`);
+                return User.where({id: id}).save({ is_activated: true }, { patch:true })
+            })
+            .then((user) => {
+                this.logger.info(`Request ID: ${reqId} - User activated!`);
                 return 'OTP Valid';
             })
             .catch((error) => {
@@ -250,7 +253,6 @@ class AccountService extends ResourceService {
         data.referral_code = this.generateReferralCode();
         data.user_id = this.generateUserID(params.type);
         data.phone = this.formatPhoneNumber(data.phone);
-        data.is_activated = false;
         data.otp = shortIdGen.generate(6);
 
         return new UserType({name: params.type}).fetch({ require: true})
@@ -327,7 +329,6 @@ class AccountService extends ResourceService {
      * @param id the pk of the user
      * @returns {Promise.<TResult>}
      */
-
     findUser(id) {
         let reqId = shortid.generate();
         this.logger.info(`Request ID: ${reqId} - Retrieve a user with id: ${id}`);
@@ -375,8 +376,6 @@ class AccountService extends ResourceService {
             });
     }
 
-
-
     /**
      * 
      * EDIT CBT questions
@@ -407,7 +406,6 @@ class AccountService extends ResourceService {
  
  
     }
-
 
     /**
      * Format Phone Number

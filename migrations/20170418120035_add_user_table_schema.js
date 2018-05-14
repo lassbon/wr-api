@@ -24,11 +24,11 @@ exports.up = function (knex) {
             table.string('account_name');
             table.integer('bvn');
             table.boolean('terms');
-            table.boolean('is_approved');
-            table.boolean('is_activated');
-            table.boolean('is_facebook');
-            table.boolean('is_twitter');
-            table.boolean('is_google');
+            table.boolean('is_approved').defaultTo(false);
+            table.boolean('is_activated').defaultTo(false);
+            table.boolean('is_facebook').defaultTo(false);
+            table.boolean('is_twitter').defaultTo(false);
+            table.boolean('is_google').defaultTo(false);
             table.string('status');
             table.biginteger('usertype_id').unsigned().notNullable().references('id').inTable('user_type').index();
             table.string('referral_code');

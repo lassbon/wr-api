@@ -107,7 +107,14 @@ class AccountService extends ResourceService {
         let reqId = shortid.generate();
         this.logger.info(`Request ID: ${reqId} - Going to retrieve a user with data: ${JSON.stringify(data)}`);
         // Create query based on the data sent (if it contains phone or not)
-        let query = data.phone ? {where: { phone: this.formatPhoneNumber(data.phone) } } : {where: { email: data.email }};
+        let query;
+        if (params.type === constants.userTypes.pro) {
+            query = data.phone ? {where: { phone: this.formatPhoneNumber(data.phone), is_activated: true, is_approved: true } } : 
+            {where: { email: data.email, is_activated: true, is_approved: true }};
+        } else {
+            query = data.phone ? { where: { phone: this.formatPhoneNumber(data.phone), is_activated: true } } : 
+            { where: { email: data.email, is_activated: true } };
+        }
         this.logger.info(`Request ID: ${reqId} - Query being used for retrieval: ${JSON.stringify(query)}`);
 
         return User.query(query)
@@ -162,11 +169,11 @@ class AccountService extends ResourceService {
             })
             .then((user) => {
                 this.logger.info(`Request ID: ${reqId} - The OTP is valid, going to update user to active`);
-                return User.where({id: id}).save({ is_activated: true }, { patch:true })
+                return User.where({ id: params.id }).save({ is_activated: true }, { patch:true })
             })
             .then((user) => {
                 this.logger.info(`Request ID: ${reqId} - User activated!`);
-                return 'OTP Valid';
+                return 'OTP valid, and user activated';
             })
             .catch((error) => {
                 this.logger.error(`Request ID: ${reqId} - Error validating OTP ${JSON.stringify(data)}, reason: ${error.message}`);

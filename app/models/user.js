@@ -24,7 +24,7 @@ let User = bookshelf.Model.extend({
             });
     },
 
-    save:  function () {
+    save: function () {
         return bookshelf.Model.prototype.save.apply(this, arguments)
             .catch(error => {
                 if (error.code === 'ER_DUP_ENTRY') {

@@ -2,33 +2,28 @@
 
 let bookshelf = require('app/bookshelf');
 let errors = require('app/errors');
-require('app/models/usertype');
 
-let User = bookshelf.Model.extend({
-    tableName: 'users',
+let Pro = bookshelf.Model.extend({
+    tableName: 'pro',
     hasTimestamps: true,
     hidden: ['created_at'],
-
-    type: function() {
-        return this.hasOne('UserType', 'id', 'usertype_id');
-    },
 
     fetch: function () {
         return bookshelf.Model.prototype.fetch.apply(this, arguments)
             .catch(error => {
-                if (error instanceof User.NotFoundError) {
-                    throw new errors.UserNotFound('User not found');
+                if (error instanceof Pro.NotFoundError) {
+                    throw new errors.ProNotFound('Pro not found');
                 }
 
                 throw error;
             });
     },
 
-    save: function () {
+    save:  function () {
         return bookshelf.Model.prototype.save.apply(this, arguments)
             .catch(error => {
                 if (error.code === 'ER_DUP_ENTRY') {
-                    throw new errors.UserExists('The user already exists');
+                    throw new errors.ProExists('The pro already exists');
                 }
 
                 throw error;
@@ -37,4 +32,4 @@ let User = bookshelf.Model.extend({
 
 });
 
-module.exports = bookshelf.model('User', User);
+module.exports = bookshelf.model('Pro', Pro);

@@ -8,6 +8,7 @@
     "migrate": "knex migrate:latest",
     "seed": "knex seed:run",
     "regression": "NODE_PATH=. istanbul cover _mocha -- -R spec test/regression/*",
+    "rollback": "knex migrate:rollback",
     "start": "npm run migrate && npm run seed && nodemon server.js"
   },
   "repository": {
@@ -28,16 +29,20 @@
     "bookshelf": "0.10.3",
     "bookshelf-paranoia": "0.10.4",
     "custom-error-generator": "7.0.0",
+    "g": "^2.0.1",
     "http-status": "1.0.1",
     "joi": "10.4.1",
     "jsonwebtoken": "7.3.0",
     "knex": "0.12.9",
     "lodash": "4.17.4",
-    "passport": "0.3.2",
-    "passport-jwt": "2.2.1",
     "mysql": "2.10.2",
+    "passport": "0.3.2",
+    "passport-facebook": "^2.1.1",
+    "passport-jwt": "2.2.1",
     "restify": "4.3.0",
     "shortid": "2.2.8",
+    "short-id-gen": "1.1.2",
+    "twilio": "^3.16.0",
     "yamljs": "0.2.9"
   },
   "devDependencies": {

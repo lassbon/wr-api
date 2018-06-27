@@ -2,16 +2,13 @@
 
 let bookshelf = require('app/bookshelf');
 let errors = require('app/errors');
-require('app/models/usertype');
+require('app/models/user');
 
-let User = bookshelf.Model.extend({
-    tableName: 'users',
+let UserType = bookshelf.Model.extend({
+    tableName: 'user_type',
     hasTimestamps: true,
     hidden: ['created_at'],
 
-    type: function() {
-        return this.hasOne('UserType', 'id', 'usertype_id');
-    },
 
     fetch: function () {
         return bookshelf.Model.prototype.fetch.apply(this, arguments)
@@ -24,7 +21,7 @@ let User = bookshelf.Model.extend({
             });
     },
 
-    save: function () {
+    save:  function () {
         return bookshelf.Model.prototype.save.apply(this, arguments)
             .catch(error => {
                 if (error.code === 'ER_DUP_ENTRY') {
@@ -37,4 +34,4 @@ let User = bookshelf.Model.extend({
 
 });
 
-module.exports = bookshelf.model('User', User);
+module.exports = bookshelf.model('UserType', UserType);

@@ -24,8 +24,16 @@ module.exports = {
 
     Unauthorized: create('Unauthorized', { code: 'UNAUTHORIZED' }),
 
+    InvalidOtp: create('InvalidOtp', { code: 'INVALID_OTP' }),
+
+    QuestionNotFound: create('QuestionNotFound', { code: 'QUESTION_NOT_FOUND' }),
+
+    UserExists: create('UserExists', { code: 'USER_EXISTS' }),
+    ProExists: create('ProExists', { code: 'PRO_EXISTS' }),
+    
     //this exception will only be used internally and will never get thrown to client
     UserNotFound: create('UserNotFound', { code: 'USER_NOT_FOUND' }),
+    ProNotFound: create('ProNotFound', { code: 'PRO_NOT_FOUND' }),
 
     //this exception will only be used internally and will never get thrown to client
     PasswordMissmatch: create('PasswordMissmatch', { code: 'PASSWORD_MISSMATCH' }),

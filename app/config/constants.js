@@ -14,10 +14,5 @@ module.exports = {
     },
     esTypes: {
         recipe: 'recipe'
-    },
-    userTypes: {
-        pro: 'pro',
-        user: 'user',
-        admin: 'admin'
     }
 };

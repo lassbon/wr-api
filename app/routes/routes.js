@@ -9,179 +9,78 @@ let config  = require('app/config/config');
 /** Application Routes **/
 module.exports.setup = function setup(server, serviceLocator, passport, docs) {
     // let recipe = serviceLocator.get('recipeController');
-    let accountController = serviceLocator.get('accountController');
-    let questionController = serviceLocator.get('questionController');
+    let account = serviceLocator.get('accountController');
 
-    /***************** USER AREA  *****************/
+    // server.get({
+    //     path: '/recipes',
+    //     name: 'List',
+    //     version: ['1.0.0'],
+    //     validation: {
+    //         params: require('app/validations/list_recipe')
+    //     }
+    // }, passport.authenticate('jwt', { session: false, failWithError: true }),
+    //     (req, res, next) => recipe.list(req, res, next));
+
+    // server.post({
+    //     path: '/recipes',
+    //     name: 'Create',
+    //     version: '1.0.0',
+    //     validation: {
+    //         body: require('app/validations/create_recipe')
+    //     }
+    // }, (req, res, next) => recipe.create(req, res, next));
+
+    // server.get({
+    //     path: '/recipes/:id',
+    //     name: 'Get',
+    //     version: '1.0.0',
+    //     validation: {
+    //         params: require('app/validations/get_recipe')
+    //     }
+    // }, passport.authenticate('jwt', { session: false, failWithError: true }),
+    //     (req, res, next) => recipe.get(req, res, next));
+
+    // server.put({
+    //     path: '/recipes/:id',
+    //     name: 'Update',
+    //     version: '1.0.0',
+    //     validation: {
+    //         body: require('app/validations/update_recipe').body,
+    //         params: require('app/validations/update_recipe').params
+    //     }
+    // }, (req, res, next) => recipe.update(req, res, next));
+
+    // server.del({
+    //     path: '/recipes/:id',
+    //     name: 'Delete',
+    //     version: '1.0.0',
+    //     validation: {
+    //         params: require('app/validations/delete_recipe')
+    //     }
+    // }, (req, res, next) => recipe.delete(req, res, next));
+
+    // server.put({
+    //     path: '/recipes/:id/rate',
+    //     name: 'Rate',
+    //     version: '1.0.0',
+    //     validation: {
+    //         params: require('app/validations/rate_recipe').params,
+    //         body: require('app/validations/rate_recipe').body
+    //     }
+    // }, passport.authenticate('jwt', { session: false, failWithError: true }),
+    //     (req, res, next) => recipe.rate(req, res, next));
 
     /**
-     * User 
-     * Authenticate using basic auth
+     * Authentication Area
      */
     server.post({
-        path: '/users/login',
-        name: 'User Login',
+        path: '/login',
+        name: 'Login',
         version: '1.0.0',
         validation: {
-            body: require('app/validations/login').body,
-            params: require('app/validations/login').params
+            body: require('app/validations/login')
         }
-    }, (req, res, next) => accountController.login(req, res, next));
-
-    /**
-     * User
-     * Authenticate using social media
-     */
-    server.post({
-        path: '/users/socialauth',
-        name: 'User Social Authentication',
-        version: '1.0.0',
-        validation: {
-            body: require('app/validations/login').socialauth,
-            params: require('app/validations/login').params
-        }
-    }, (req, res, next) => accountController.socialauth(req, res, next));
-    
-    /**
-     * User
-     * verify OTP
-     */
-    server.post({
-        path: '/users/:id/verify_otp',
-        name: 'Verify OTP',
-        version: '1.0.0',
-        validation: {
-            body: require('app/validations/verify_otp').body
-        }
-    }, (req, res, next) => accountController.verifyOtp(req, res, next));
-
-    server.post({
-        path: '/users/signup',
-        name: 'User Signup',
-        version: '1.0.0',
-        validation: {
-            body: require('app/validations/user_signup')
-        }
-    }, (req, res, next) => accountController.signup(req, res, next));
-
-    /**
-     * User profile 
-     * get the Users profile
-     */
-    server.get({
-        path: '/users/:id',
-        name: 'User GetProfile',
-        version: '1.0.0',
- 
-    }, passport.authenticate('jwt', { session: false, failWithError: true }),
-    (req, res, next) => accountController.get(req, res, next));
-
-    /**
-     * User profile 
-     * get the Users profile
-     */
-    server.get({
-        path: '/users',
-        name: 'User Profile',
-        version: '1.0.0',
- 
-    }, passport.authenticate('jwt', { session: false, failWithError: true }),
-    (req, res, next) => accountController.list(req, res, next));
-   
-    /**
-     * User profile 
-     * Update the User's profile
-     */
-    server.put({
-        path: '/users/:id',
-        name: 'Update UserProfile',
-        version: '1.0.0',
-        validation: {
-            body: require('app/validations/user_updateprofile')
-        }
- 
-    }, passport.authenticate('jwt', { session: false, failWithError: true }),
-    (req, res, next) => accountController.update(req, res, next));
-    
-    /**
-     * Get all users
-     */
-    server.get({
-        path: '/users',
-        name: 'GET ALL Users',   
-    }, passport.authenticate('jwt', { session: false, failWithError: true }),
-    (req, res, next) => accountController.list(req, res, next));
-
-
-    /***************** ADMIN AREA  *****************/
-
-    /**
-     * ADMIN
-     * GET
-     * Get All CBT questions
-    **/
-    server.get({
-        path: '/questions',
-        name: 'Get all questions',   
-    }, passport.authenticate('jwt', { session: false, failWithError: true }),
-    (req, res, next) => questionController.list(req, res, next));
-
-    /**
-     * ADMIN
-     * GET
-     * Get a question by ID
-    **/
-    server.get({
-        path: '/questions/:id',
-        name: 'GET CBT QUESTION',   
-    }, passport.authenticate('jwt', { session: false, failWithError: true }),
-    (req, res, next) => questionController.get(req, res, next));
-
-    /**
-     * 
-     * ADMIN
-     * POST
-     * Add a CBT question
-     * 
-    **/
-    server.post({
-        path: '/questions',
-        name: 'Add a CBT question',   
-        validation: {
-            body: require('app/validations/add_question')
-        }
-    }, passport.authenticate('jwt', { session: false, failWithError: true }),
-    (req, res, next) => questionController.add(req, res, next));
-
-    /**
-     * ADMIN
-     * PUT
-     * Edit a question
-    **/
-    server.put({
-        path: '/questions/:id',
-        name: 'Edit a question',
-        validation:{
-            body: require('app/validations/update_question')
-        }
-    }, passport.authenticate('jwt', { session: false, failWithError: true }),
-    (req, res, next) => questionController.update(req, res, next));
-
-    /**
-    * Image Upload
-    * 
-    **/
-    server.post({
-        path: '/imageupload',
-        name: 'Upload Images',
-        version: '1.0.0',
-        validation: {
-        // body: require('app/validations/imageupload')
-        }
-
-    }, (req, res, next) => accountController.imageUpload(req, res, next));
-
-
+    }, (req, res, next) => account.login(req, res, next));
 
     if (config.environment !== 'production') {
 

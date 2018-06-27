@@ -1,6 +1,6 @@
 'use strict';
 
-let appName = 'progo or workRaven';
+let appName = 'progo';
 const config = {
     appName: appName,
     environment: process.env.NODE_ENV,
@@ -30,38 +30,10 @@ const config = {
         secret: process.env.JWT_SECRET,
         expiresIn: parseInt(process.env.JWT_EXPIRES_IN)
     },
-    apiTestUser: 
-    {
-        userFirstname: 'Abayomi', 
-        userLastname: 'Rasheed',
-        userOthername: 'Abu Mariam',
-        userPhoneNumber: '1234567890',
-        userAddress: 'Sabo Yaba Lagos',
-        userEmail: 'abc@gmail.com',
-        userDOB: '27-12-2010',
-        country: 'Nigeria',
-        state: 'Lagos',
-        userImageURL: 'coming soon',
-        userAccountNumber: "1234567890",
-        userAccountName: 'Abayomi Rasheed',
-        userBVN: '120354278',
-        userStatus: 'Active',
-        referralCode: '54ASX',
-        invitedByReferralCode:'YYT2w',
-        termsAndCondition: true,
-        isApproved: true,
-        isFacebook: false,
-        isTwitter: false,
-        isGoogle: false,        
+    apiTestUser: {
+        fullName: process.env.API_TEST_USER_FULLNAME,
         userName: process.env.API_TEST_USER_EMAIL,
         password: process.env.API_TEST_USER_PASSWORD
-    },
-    OTPsetupDetails:
-    {
-        accountSid: process.env.TWILIO_SID,
-        authToken:process.env.TWILIO_AUTH_TOKEN,
-        phoneNumber:process.env.TWILIO_NUMBER
-
     }
 
 };

@@ -10,10 +10,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT="$(dirname "${SCRIPT_DIR}")"
 
 echo " ----- Starting Up Containers -----"
-docker-compose -p progo_ up -d
+docker-compose -p progo up -d
 
 echo " ----- Starting Disposable Docker Container -----"
-
 # Now start an interactive session for the web app container's shell and install dependencies
 docker run \
 -i \

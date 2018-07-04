@@ -2,7 +2,8 @@
 
 let User = require('app/models/user');
 let Pro = require('app/models/pro');
-let Cbt = require('app/models/cbtquestions');
+let Cbt = require('app/models/questions');
+let Professions = require('app/models/professions');
 let shortid = require('shortid');
 let constants = require('app/config/constants');
 let config = require('app/config/config');
@@ -102,7 +103,8 @@ class AccountService {
      * @returns {Promise.<TResult>}
      */
 
-    prologin(phone,password) {
+    /**
+     * prologin(phone,password) {
        
         const phoneNumber = this.formatPhoneNumber(phone);
 
@@ -133,35 +135,9 @@ class AccountService {
                 throw error;
             });
     }
-
-
-    /**
-     * Facebook Login 
-     *
-     * @param email
-     * @param password
-     * @returns {Promise.<TResult>}
      */
 
-    facebooklogin(email, password) {
-    
 
-        
-    }
-
-      /**
-     * Facebook Login 
-     *
-     * @param email
-     * @param password
-     * @returns {Promise.<TResult>}
-     */
-
-    proFacebookLogin(email, password) {
-    
-
-        
-    }
     
   /**
      * Users Referral Code  
@@ -206,7 +182,7 @@ class AccountService {
      * @param userData
      * @returns {Promise.<TResult>}
      */
-    proSignup(proData) {
+   /* proSignup(proData) {
 
         let reqId = shortid.generate();
         this.logger.info(`Request ID: ${reqId} - Creating a pro with data: ${JSON.stringify(proData)}`);
@@ -371,7 +347,7 @@ class AccountService {
      * @param userid
      * @returns {Promise.<TResult>}
      */
-    updateReferralCode(userid,userData)
+    /*updateReferralCode(userid,userData)
      {
        const id = userid;
        const invitedByReferralCode = userData.invitedByReferralCode;
@@ -380,7 +356,6 @@ class AccountService {
         this.logger.info(`Request ID: ${reqId} - Retrieve a user with id: ${id}`);
         /*If the function is used to update Referral code, 
         check if referralcode is correct before proceeding
-        */
        this.logger.info(`Request ID: ${reqId} - Verifying if the inivted referal code `, invitedByReferralCode, ' exists to any user '); 
        User
        .where({referralCode: invitedByReferralCode })
@@ -410,7 +385,7 @@ class AccountService {
         throw error;
     });*/
        
-    }
+   
 
 
 /**
@@ -419,7 +394,7 @@ class AccountService {
      * @param userid
      * @returns {Promise.<TResult>}
      */
-    proUpdateReferralCode(proid, proData)
+    /*proUpdateReferralCode(proid, proData)
      {
        const id = proid;
        const invitedByReferralCode = proData.invitedByReferralCode;
@@ -428,7 +403,7 @@ class AccountService {
         this.logger.info(`Request ID: ${reqId} - Retrieve a user with id: ${id}`);
         /*If the function is used to update Referral code, 
         check if referralcode is correct before proceeding
-        */
+       
        this.logger.info(`Request ID: ${reqId} - Verifying if the inivted referal code `, invitedByReferralCode, ' exists to any PRO '); 
        Pro
        .where({referralCode: invitedByReferralCode })
@@ -458,7 +433,7 @@ class AccountService {
         throw error;
     });*/
        
-    }
+    
 
  /**
      * GET ALL CBT questions
@@ -492,7 +467,7 @@ class AccountService {
      *
      
      */
-    pro()
+  /**  pro()
     {
         let reqId = shortid.generate();
         this.logger.info(`Request ID: ${reqId} - Getting all pro`);
@@ -556,7 +531,7 @@ class AccountService {
 
         return new Cbt().save(data)
             .then((cbt) => {
-                this.logger.info(`Request ID: ${reqId} - CBT question created `, JSON.stringify(this.data));
+                this.logger.info(`Request ID: ${reqId} - CBT question created `, JSON.stringify(this.cbtdata));
                                 
                 return cbt;
             }).catch((error) => {
@@ -624,7 +599,7 @@ class AccountService {
      *
      }
      */
-    getuser(id){
+   /* getuser(id){
         let reqId = shortid.generate();
         this.logger.info(`Request ID: ${reqId} -Get a User with id: ${(id)}`);
 
@@ -802,20 +777,7 @@ class AccountService {
     }
 
 /**
-     * Phone Verification
-     *
-     * @param phoneNumber
-     * @returns {Promise.<TResult>}
-     */
-
-    phoneVerification(phoneNumber) {
-        this.logger.info(`Sending OTP to phone number: ${phoneNumber}`);
-        var getOTP = this.generateOTP()
-        var message = "Your OTP verification code is: " .getOTP;
-        
-      //  this.notifications.se
- 
-    }
+    
 
  /**
      * Genrate Referral Code
@@ -843,7 +805,7 @@ class AccountService {
      * @returns code
      */
 
-        generateUserID() 
+     /**   generateUserID() 
         {
             var identityCode="USER";
             var todayDate = new Date();
@@ -871,11 +833,7 @@ class AccountService {
     return "WR- ADMIN";
     }
 
-      /**
-     *OTP CODE
-     *
-     * @returns code
-     */
+     
     generateOTP() 
     {
         var possibleOTPArr = "0123456789";
@@ -888,18 +846,30 @@ class AccountService {
        
      }
 
-   /**
-    *   generateCbtID(){
-  
-        var todayDate = new Date();
-        var cbtID="";
-        cbtID += todayDate.getFullYear()+todayDate.getMonth()+todayDate.getDay()+todayDate.getTime();
-        
-        return cbtID;
-       
-     }
      **/
-        
+
+     //******PROFESSION ********//
+     
+    /**
+     * POST profession
+     */
+    addprofession(data){
+        let reqId = shortid.generate();
+        this.logger.info(`Request ID: ${reqId} - Creating a profession: ${JSON.stringify(data)}`);
+
+        return new Professions().save(data)
+            .then((data_) => {
+                this.logger.info(`Request ID: ${reqId} -Profession created `, JSON.stringify(this.data));
+                                
+                return data_;
+            }).catch((error) => {
+
+                this.logger.error(`Request ID: ${reqId} - Error creating profession with data ${JSON.stringify(data)}, 
+                reason: ${error.message}`);
+                throw error;
+            });
+    }
+   
 
 
 }

@@ -75,7 +75,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
      * Contains endpoints that manages users;
      * From authentication to profile edit.
      */
-    server.post({
+/**    server.post({
         path: '/users/login',
         name: 'User Login',
         version: '1.0.0',
@@ -83,8 +83,8 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
             body: require('app/validations/login')
         }
     }, (req, res, next) => account.login(req, res, next));
-
-    server.get({
+**/
+   /** server.get({
         path: '/users/facebook/login',
         name: 'User Facebook Login',
         version: '1.0.0',
@@ -92,8 +92,8 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
             body: require('app/validations/login')
         }
     }, (req, res, next) => passport.authenticate('facebook'));
-    
-    server.get({
+    **/
+   /** server.get({
         path: '/auth/facebook/callback',
         name: 'User Facebook Login',
         version: '1.0.0',
@@ -103,6 +103,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
     }, (req, res, next) => passport.authenticate('facebook', { failureRedirect: '/' }
     ));
     
+    **/
  
   
     //account.facebooklogin(req, res, next));
@@ -112,7 +113,7 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
 
 
   
-    server.post({
+  /**  server.post({
         path: '/users/signup',
         name: 'User Signup',
         version: '1.0.0',
@@ -120,25 +121,26 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
             body: require('app/validations/user_signup')
         }
     }, (req, res, next) => account.signup(req, res, next));
-
+**/
 
 /**
      * User profile 
      * get the Users profile
      */
-    server.get({
+ /**   server.get({
         path: '/users/profile/:id',
         name: 'User GetProfile',
         version: '1.0.0',
  
     }, (req, res, next) => account.profile(req, res, next));
-
+**/
 
      /**
      * User Referral code 
      * Update the Pro profile
      */
-    server.patch({
+  
+  /**   server.patch({
         path: '/users/referalcode/:id',
         name: 'Users referal code',
         version: '1.0.0',
@@ -148,13 +150,14 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
  
     }, (req, res, next) => account.usersReferralCode(req, res, next));
     
+    **/
 
    
 /**
      * User profile 
      * Update the Users profile
      */
-    server.patch({
+  /**  server.patch({
         path: '/users/profile/:id',
         name: 'user UpdateProfile',
         version: '1.0.0',
@@ -164,14 +167,14 @@ module.exports.setup = function setup(server, serviceLocator, passport, docs) {
  
     }, (req, res, next) => account.updateProfile(req, res, next));
     
-
+**/
 
 /**
  * PATCH
      * User Referaal Code 
      * Update the Referal code for Users
 **/
-server.patch({
+/**server.patch({
     path: '/users/referralcode/:id',
     name: 'user Referral Code',
     version: '1.0.0',
@@ -181,12 +184,12 @@ server.patch({
    
 }, (req, res, next) => account.usersReferralCode(req, res, next));
 
-
+**/
      /**
      * Pro Login 
      * Pro Login to get a JWT
      */
-    server.post({
+  /**  server.post({
         path: '/pro/login',
         name: 'Pro Login',
         version: '1.0.0',
@@ -200,7 +203,7 @@ server.patch({
      * Pro Signup 
      * get the Professionals profile
      */
-    server.post({
+   /** server.post({
         path: '/pro/signup',
         name: 'Pro Signup',
         version: '1.0.0',
@@ -214,7 +217,7 @@ server.patch({
      * Pro Facebook login 
      * get the Professionals profile
      */
-    server.post({
+   /** server.post({
         path: '/pro/facebook/login',
         name: 'Pro Facebook Login',
         version: '1.0.0',
@@ -228,7 +231,7 @@ server.patch({
      * Pro profile 
      * get the Professionals profile
      */
-    server.get({
+   /** server.get({
         path: '/pro/profile/:id',
         name: 'Pro getProfile',
         version: '1.0.0',
@@ -240,7 +243,7 @@ server.patch({
      * Pro profile 
      * Update the Pro profile
      */
-    server.patch({
+   /** server.patch({
         path: '/pro/profile/:id',
         name: 'Pro updateProfile',
         version: '1.0.0',
@@ -255,7 +258,7 @@ server.patch({
      * User profile 
      * Update the Users profile
 **/
-    server.post({
+   /** server.post({
         path: '/otpverification',
         name: 'OTP Verification',
         version: '1.0.0',
@@ -270,7 +273,7 @@ server.patch({
      * Pro Referaal Code 
      * Update the Referal code for Pro
 **/
-server.patch({
+/**server.patch({
     path: '/pro/referralcode/:id',
     name: 'pro Referral Code',
     version: '1.0.0',
@@ -305,7 +308,7 @@ server.get({
  * GET
  *Get All Pro
 **/
-server.get({
+/**server.get({
     path: '/admin/pro/',
     name: 'GET ALL PRO',   
 }, (req, res, next) => account.pro(req, res, next));
@@ -337,7 +340,7 @@ server.get({
  * GET
  *Get Single Pro
 **/
-server.get({
+/**server.get({
     path: '/admin/pro/:id',
     name: 'GET PRO',   
 }, (req, res, next) => account.getpro(req, res, next));
@@ -371,7 +374,7 @@ server.patch({
 * Image Upload
 * 
 **/
-server.post({
+/**server.post({
     path: '/imageupload',
     name: 'Upload Images',
     version: '1.0.0',
@@ -380,6 +383,18 @@ server.post({
     }
 
 }, (req, res, next) => account.imageUpload(req, res, next));
+**/
+/***************** PROFESSIONS ROUTE  *****************/
+/**ADMIN
+ * POST
+ *Create Profession e,g plumbes, tilers, 
+**/
+server.post({
+    path: '/admin/profession',
+    name: 'ADD A PROFESSION',   
+}, (req, res, next) => account.addprofession(req, res, next));
+
+
 
 
 

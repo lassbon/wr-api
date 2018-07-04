@@ -519,6 +519,38 @@ class AccountController {
         }).then(next);
     }
 
+
+   /**
+     * Endpoint Post /admin/profession
+     * ProSignup 
+     * @param req
+     * @param res
+     * @param next
+     */
+    addprofession(req, res, next) {
+
+        this.service.addprofession(req.body)
+        .then((data) => {
+            res.send(httpStatus.OK, data);
+        })
+        .catch((error) => {
+            switch (error.constructor){
+                case errors.ProfessionNotFound:
+                case errors.ProfessionExists:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.UserExists('The profession exists already'));
+                    break;
+                default:
+                    res.send(httpStatus.INTERNAL_SERVER_ERROR,
+                        new errors.InternalServerError('Internal Server Error, please check the API logs for details'));
+            }
+        }).then(next);
+    }
+
+
+
+
+
          /**
      * Endpoint PATCH /pro/updateProfile/:id
      * Signup 

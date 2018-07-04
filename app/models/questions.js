@@ -4,7 +4,7 @@ let bookshelf = require('app/bookshelf');
 let errors = require('app/errors');
 
 let Cbt_questions = bookshelf.Model.extend({
-    tableName: 'cbtquestions',
+    tableName: 'questions',
     hasTimestamps: true,
     hidden: ['created_at'],
 
